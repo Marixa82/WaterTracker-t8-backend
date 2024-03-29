@@ -47,9 +47,8 @@ export const loginController = async(req, res) => {
     }
 
     const payload = { id: user.id };
-    const { SECRET_KEY } = process.env;
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '23h' })
-    const loginUser = await User.findByIdAndUpdate(user._id, { token }, { new: true });
+    await User.findByIdAndUpdate(user._id, { token }, { new: true });
     res.status(200).json({
         "message": "Login successful",
         token,

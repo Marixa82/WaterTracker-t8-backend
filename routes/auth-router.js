@@ -1,12 +1,11 @@
 import express from 'express';
-import ctrlWrapper from '../helpers/ctrlWrapper.js';
+import { ctrlWrapper, validateBody } from '../helpers/index.js';
 import { loginController, logoutController, registerController } from '../controllers/auth-controller.js';
-import validateBody from '../helpers/validateBody.js';
-import { registerSchema } from '../models/authmodel.js';
-import { auth } from '../middlewares/authValidation.js';
+import { registerSchema } from '../models/userModel.js';
+import { authValidation } from '../middlewares/index.js';
 
 export const authRouter = express.Router();
 
 authRouter.post('/register', validateBody(registerSchema), ctrlWrapper(registerController));
 authRouter.post('/login', validateBody(registerSchema), ctrlWrapper(loginController));
-authRouter.post('/logout', auth, ctrlWrapper(logoutController))
+authRouter.post('/logout', authValidation, ctrlWrapper(logoutController))

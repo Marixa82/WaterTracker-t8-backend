@@ -5,7 +5,7 @@ import HttpError from "../helpers/HttpError.js";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-const {SECRET_KEY} = process.env
+const {JWT_SECRET} = process.env
 
 export const registerController = async(req, res) => {
     const { password, email } = req.body;
@@ -19,7 +19,7 @@ export const registerController = async(req, res) => {
     const newUser = await User.create({ email, password: hashPass, avatarURL });
 
     const payload = { id: newUser.id }
-    const token = jwt.sign(payload, SECRET_KEY)
+    const token = jwt.sign(payload, JWT_SECRET)
     await User.findByIdAndUpdate(newUser.id, { token }, {new: true}); 
     
     res.status(201).json({
@@ -48,7 +48,7 @@ export const loginController = async(req, res) => {
 
     const payload = { id: user.id };
     const { SECRET_KEY } = process.env;
-    const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' })
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '23h' })
     const loginUser = await User.findByIdAndUpdate(user._id, { token }, { new: true });
     res.status(200).json({
         "message": "Login successful",

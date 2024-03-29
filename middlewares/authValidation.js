@@ -3,7 +3,7 @@ import HttpError from "../helpers/HttpError.js";
 import 'dotenv/config';
 import jwt from 'jsonwebtoken'
 
-const { SECRET_KEY } = process.env;
+const { JWT_SECRET } = process.env;
 
 export const auth = async (req, res, next) => {
     const { authorization = "" } = req.headers;
@@ -14,7 +14,7 @@ export const auth = async (req, res, next) => {
     };
     
     try {
-        const { id } = jwt.verify(token, SECRET_KEY);
+        const { id } = jwt.verify(token, JWT_SECRET);
         const user = await User.findById(id);
         if (!user || !user.token || user.token !== token) {
             next(HttpError(401, "Not authorized"))

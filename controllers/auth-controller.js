@@ -1,13 +1,13 @@
-import { User } from "../models/authmodel.js";
+import { User } from "../models/userModel.js";
 import gravatar from 'gravatar';
 import bcryptjs from 'bcryptjs'
-import HttpError from "../helpers/HttpError.js";
+import { HttpError } from "../helpers/index.js";
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
 
-const {JWT_SECRET} = process.env
+const { JWT_SECRET } = process.env
 
-export const registerController = async(req, res) => {
+export const registerController = async (req, res) => {
     const { password, email } = req.body;
     const user = await User.findOne({ email });
     if (user) {
@@ -20,8 +20,8 @@ export const registerController = async(req, res) => {
 
     const payload = { id: newUser.id }
     const token = jwt.sign(payload, JWT_SECRET)
-    await User.findByIdAndUpdate(newUser.id, { token }, {new: true}); 
-    
+    await User.findByIdAndUpdate(newUser.id, { token }, { new: true });
+
     res.status(201).json({
         "message": "New user is created",
         email,
@@ -29,7 +29,7 @@ export const registerController = async(req, res) => {
     });
 }
 
-export const loginController = async(req, res) => {
+export const loginController = async (req, res) => {
     const { password, email } = req.body;
     const user = await User.findOne({ email });
 
@@ -57,7 +57,7 @@ export const loginController = async(req, res) => {
     })
 }
 
-export const logoutController = async(req, res) => {
+export const logoutController = async (req, res) => {
     const { id } = req.user;
     await User.findByIdAndUpdate(id, { token: null });
     res.status(204).json()

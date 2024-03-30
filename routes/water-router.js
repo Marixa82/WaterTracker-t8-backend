@@ -8,8 +8,4 @@ import { waterAddedSchema, waterRateSchema } from "../models/userModel.js";
 export const waterRouter = express.Router();
 
 waterRouter.patch('/water_rate', authValidation, validateBody(waterRateSchema), ctrlWrapper(waterRateController));
-waterRouter.post('/', authValidation, validateBody(waterAddedSchema), ctrlWrapper(addWaterController) )
-
-
-
-
+waterRouter.put('/', authValidation, validateBody(waterAddedSchema), ctrlWrapper(addWaterController) )

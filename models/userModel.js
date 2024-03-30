@@ -18,9 +18,17 @@ const userSchema = new Schema(
             type: String,
             default: null,
         },
+        name: {
+            type: String,
+            default: '',
+        },
         avatarURL: {
             type: String,
         },
+        waterRate: {
+            type: Number,
+            default: 2000
+        }
     },
     { versionKey: false, timestamps: true }
 );
@@ -32,3 +40,6 @@ export const registerSchema = Joi.object({
     password: Joi.string().min(8).max(64).required(),
 });
 
+export const waterRateSchema = Joi.object({
+    waterRate: Joi.number().required().integer().min(100).max(15000)
+})

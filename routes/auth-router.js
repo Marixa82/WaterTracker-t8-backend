@@ -8,4 +8,4 @@ export const authRouter = express.Router();
 
 authRouter.post('/register', validateBody(registerSchema), ctrlWrapper(registerController));
 authRouter.post('/login', validateBody(registerSchema), ctrlWrapper(loginController));
-authRouter.post('/logout', authValidation, ctrlWrapper(logoutController))
+authRouter.post('/logout', authValidation, ctrlWrapper(logoutController));

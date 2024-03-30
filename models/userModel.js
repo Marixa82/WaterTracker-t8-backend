@@ -52,6 +52,7 @@ const userSchema = new Schema(
                 }],
             default: []
                      
+
         }
     },
     { versionKey: false, timestamps: true }
@@ -66,4 +67,8 @@ export const registerSchema = Joi.object({
 
 export const waterAddedSchema = Joi.object({
     time: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required()
+})
+
+export const waterRateSchema = Joi.object({
+    waterRate: Joi.number().required().integer().min(100).max(15000)
 })

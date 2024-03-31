@@ -66,7 +66,7 @@ export const waterRateSchema = Joi.object({
 })
 
 export const waterAddedSchema = Joi.object({
-    date: Joi.string().regex(/^(0?[1-9]|[12][0-9]|3[01])[\/-](0?[1-9]|1[012])[\/\-]\d{4}$/).required().messages({
+    date: Joi.string().regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/).required().messages({
         "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
     }),
     time: Joi.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).required().messages({

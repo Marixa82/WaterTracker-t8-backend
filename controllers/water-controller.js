@@ -38,27 +38,35 @@ export const addWaterController = async (req, res) => {
     })
 };
 
-export const updateWaterController = async (req, res) => {
-    const {id} = req.user
-    const { waterId } = req.params;
-    const { time, waterAmount } = req.body;
-    if (!time && !waterAmount) throw HttpError(404, "Must be at least one field")
-    
-
-    // await User.findByIdAndUpdate(id, { $pull: {waters: {_id: waterId}} }, {new: true});
-        // return res.json({
-        //     "message": "Water portion is deleted successful",
-        // })
-
-}
-
 export const deleteWaterController = async (req, res) => {
-    const {id} = req.user
-    const { waterId } = req.params;
+    const { id} = req.user
+    const { id: waterId } = req.params;
+    const {waters} = await User.findById(id);
+    const waterPortion = waters.find(water => water._id.toString() === waterId);
+    if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
 
-    await User.findByIdAndUpdate(id, { $pull: {waters: {_id: waterId}} }, {new: true});
+    await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
+    return res.status(204)
+
+};
+
+export const updateWaterController = async (req, res) => {
+    const { id } = req.user
+    const { id: waterId } = req.params;
+    const { time, waterAmount } = req.body;
+    const {waters} = await User.findById(id);
+    const waterPortion = waters.find(water => water._id.toString() === waterId);
+    if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
+    
+    if (!time && !waterAmount) throw HttpError(400, "Must be at least one field");
+    if (time) waterPortion.time = time
+    if(waterAmount) waterPortion.amount = waterAmount
+
+    await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
+    await User.findByIdAndUpdate(id, { $push: { waters: {...waterPortion}} }, { new: true })
         return res.json({
-            "message": "Water portion is deleted successful",
+            "message": "Water portion is updated successful",
+            waterPortion
         })
 
 }

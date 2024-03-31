@@ -1,0 +1,710 @@
+
+ {"openapi": "3.0.0",
+  "info": {
+    "version": "1.0.8",
+    "title": "WaterTracker",
+    "description": ""
+    
+  },
+  "servers": [
+    {
+      "url": "https://watertracker-t8-backend.onrender.com"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "tags": [
+        {
+            "name": "Auth",
+            "description": "Authorization endpoints"
+        },
+        {
+            "name": "User",
+            "description": "User basic information"
+        },
+        {
+            "name": "Waters",
+            "description": "Waters endpoints"
+        }
+        
+    ],
+  "paths": {
+    "/api/auth/register": {
+        "post":{
+            "tags": ["Auth"],
+            "summary": "User registration",
+            "requestBody":{
+                "description": "Registration user",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/RegistrationRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "201":{
+            "description": "New user is created",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/RegistrationResponse"}
+              }
+            }
+          },
+          "400":{
+            "description": "Bad Request",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+              }
+            }
+          },
+           "409":{
+            "description": "Conflict",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/auth/login": {
+        "post":{
+            "tags": ["Auth"],
+            "summary": "User login",
+            "requestBody":{
+                "description": "Login user",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/LoginRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "Login successful",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/LoginResponse"}
+              }
+            }
+          },
+          "400":{
+            "description": "Bad Request",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+              }
+            }
+          },
+           "409":{
+            "description": "Conflict",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/auth/logout": {
+        "post":{
+            "tags": ["Auth"],
+            "summary": "User logout",
+            "requestBody":{
+                "description": "Logout user",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/LogoutRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "401":{
+            "description": "Not authorized",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/LogoutResponse"}
+              }
+            }
+          }
+          
+        }
+
+        }
+    },
+    "/api/user/avatars":{
+      "patch":{
+            "tags": ["User"],
+            "summary": "User's avatar",
+            "requestBody":{
+                "description": "Update user avatar",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserAvatarRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserAvatarResponse"}
+              }
+            }
+          },
+          "400":{
+            "description": "Bad Request",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+              }
+            }
+          },
+           "409":{
+            "description": "Conflict",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/user/:id":{
+       "get":{
+            "tags": ["User"],
+            "summary": "User's info",
+            "requestBody":{
+                "description": "Get user info",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+              }
+            }
+          },
+          "404":{
+            "description": "Not found",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+              }
+            }
+          }
+        }
+
+        },
+        "put":{
+            "tags": ["User"],
+            "summary": "User's update info",
+            "requestBody":{
+                "description": "User's new info",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserUpdateInfoRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User's info  updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserUpdateInfoResponse"}
+              }
+            }
+          },
+          "404":{
+            "description": "Not found",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/waters/water_rate":{
+      "patch":{
+            "tags": ["Waters"],
+            "summary": "User's avatar",
+            "requestBody":{
+                "description": "Update user avatar",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/WaterUpdateRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/WaterUpdateResponse"}
+              }
+            }
+          },
+          "400":{
+            "description": "Bad Request",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+              }
+            }
+          },
+           "409":{
+            "description": "Conflict",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/waters":{
+      "put":{
+            "tags": ["Waters"],
+            "summary": "User's info",
+            "requestBody":{
+                "description": "Get user info",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+              }
+            }
+          },
+          "404":{
+            "description": "Not found",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    },
+    "/api/waters/:id":{
+      "put":{
+            "tags": ["Waters"],
+            "summary": "User's info",
+            "requestBody":{
+                "description": "Get user info",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+              }
+            }
+          },
+          "404":{
+            "description": "Not found",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+              }
+            }
+          }
+        }
+
+        },
+        "delete":{
+            "tags": ["Waters"],
+            "summary": "User's info",
+            "requestBody":{
+                "description": "Get user info",
+            "required": true,
+        "content": {
+           "application/json":{
+            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+           }
+         } 
+        },
+        "responses": {
+          "200":{
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json":{
+                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+              }
+            }
+          },
+          "404":{
+            "description": "Not found",
+            "content": {
+            "application/json":{
+                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+              }
+            }
+          }
+        }
+
+        }
+    }
+    
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest":{
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email":{
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "pattern": "allow:[com, net]"
+          },
+          "password":{
+            "type": "string",
+            "description": "User's password",
+            "format": "password",
+            "example": "qwerty12345",
+            "minimum": 8,
+            "maximum": 64
+          }
+        }
+      },
+      "RegistrationResponse":{
+        "type": "object",
+        "properties": {
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier of the user",
+                "example": "65b55865b6b2ac84bc52a78y"
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "description": "Email address of the user",
+                "example": "testUser@gmail.com"
+              }
+            }
+          }
+        }
+      },
+      "LoginRequest":{
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email":{
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "pattern": "allow:[com, net]"
+          },
+          "password":{
+            "type": "string",
+            "description": "User's password",
+            "format": "password",
+            "example": "qwerty12345",
+            "minimum": 8,
+            "maximum": 64
+          }
+        }
+      },
+      "LoginResponse": {
+        "required": [
+          "user",
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token":{
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDkzZmI1MDZkODliOTVhMzUzYjA5MSIsImlhdCI6MTcxMTg4MjI5MiwiZXhwIjoxNzExOTY1MDkyfQ.vbNFdkvoj65pEUFSYjCSOO01CVZlfuY5LDDf-b35ns4"
+          },
+          "user":{
+            "required":[
+              "name",
+              "gender",
+              "avatarURL",
+              "waterRate",
+              "waters",
+              "watersForDay"],
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "default": "",
+                  "example": "UserName"
+                },
+                "gender":{
+                  "type": "string",
+                  "example": "female",
+                  "enum": [
+                    "male",
+                    "female"
+                  ],
+                  "default": null
+                },
+                "avatarURL":{
+                  "type": "string",
+                  "nullable": true,
+                  "default": null,
+                  "example": ""
+                },
+                "waterRate":{
+                  "type": "number",
+                  "default": "2000",
+                  "minimum": 0,
+                  "maximum": 15000
+
+                }
+              }
+            
+
+          }
+        }
+      },
+      "LogoutRequest":{
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email":{
+            "type": "string",
+            "description": "User's email",
+            "format": "email",
+            "pattern": "allow:[com, net]"
+          },
+          "password":{
+            "type": "string",
+            "description": "User's password",
+            "format": "password",
+            "example": "qwerty12345",
+            "minimum": 8,
+            "maximum": 64
+          }
+        }
+      },
+      "LogoutResponse": {
+        "type": "object",
+        "properties": {
+       
+        }
+      },
+      "UserAvatarRequest":{
+        "required": [
+          "avatar"
+        ],
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "UserAvatarResponse":{
+        "required": [
+          "avatarURL"
+        ],
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "nullable": true,
+            "example": "",
+            "default": null
+          }
+        }
+      },
+      "UserInfoRequest":{
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {
+                "type": "string",
+                "description": "Unique identifier of the user",
+                "example": "65b55865b6b2ac84bc52a78y"
+              }
+        }
+      },
+      "UserInfoResponse": {
+        "required": [
+          "user",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+                "type": "string",
+                "description": "Unique identifier of the user",
+                "example": "65b55865b6b2ac84bc52a78y"
+              },
+          "user":{
+            "required":[
+              "name",
+              "gender",
+              "avatarURL",
+              "waterRate",
+              "waters",
+              "watersForDay"],
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "default": "",
+                  "example": "UserName"
+                },
+                "gender":{
+                  "type": "string",
+                  "example": "female",
+                  "enum": [
+                    "male",
+                    "female"
+                  ],
+                  "default": null
+                },
+                "avatarURL":{
+                  "type": "string",
+                  "nullable": true,
+                  "default": null,
+                  "example": ""
+                },
+                "waterRate":{
+                  "type": "number",
+                  "default": "2000",
+                  "minimum": 0,
+                  "maximum": 15000
+
+                }
+              }
+            
+
+          }
+        }
+      },
+      "errorBadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "status":{
+            "type": "integer",
+            "description": "Error status code",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+           
+          }
+        }
+      },
+      "errorConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status":{
+            "type": "integer",
+            "description": "Error status code",
+            "example": 409
+          },
+          "message": {
+            "type": "string",
+            "description": "Email in use"
+           
+          }
+        }
+      },
+      "errorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "status":{
+            "type": "integer",
+            "description": "Error status code",
+            "example": 401
+          },
+          "message": {
+            "type": "string",
+            "description": "Not authorized"
+           
+          }
+        }
+      },
+      "errorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status":{
+            "type": "integer",
+            "description": "Error status code",
+            "example": 404
+          },
+          "message": {
+            "type": "string",
+            "description": "Not found"
+           
+          }
+        }
+      },
+      "errorServerResponse": {
+        "type": "object",
+        "properties": {
+          "status":{
+            "type": "integer",
+            "description": "Error status code",
+            "example": 500
+          },
+          "message": {
+            "type": "string",
+            "description": "Server error"
+           
+          }
+        }
+      }
+    }
+    
+  }
+}

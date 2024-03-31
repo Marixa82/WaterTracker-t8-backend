@@ -41,12 +41,23 @@ const userSchema = new Schema({
                     },
                     year: String,
                     time: String,
-                    waterRateForThisDay: Number,
                     amount: Number,
                 }],
+            default: []          
+    }   ,
+        watersForDay: {
+            type: [{
+                day: String,
+                month: {
+                            type: String,
+                            enum: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                        },
+                year: String,
+                waterRateForThisDay: Number,
+                allAmountForDay: Number,
+            }],
             default: []
-                     
-        }
+            }
 
     },
 

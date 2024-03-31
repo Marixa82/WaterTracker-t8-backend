@@ -1,8 +1,7 @@
 import { Schema, model } from "mongoose";
 import Joi from "joi";
 
-const userSchema = new Schema(
-    {
+const userSchema = new Schema({
         password: {
             type: String,
             min: 8,
@@ -29,29 +28,10 @@ const userSchema = new Schema(
             type: Number,
             default: 2000
         },
-        // waters: {
-        //     type: [{
-        //             month: {
-        //                 type: String,
-        //                 enum: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        //             },
-        //             year: {
-        //                 type: String,
-        //             },
-        //             useWater: {
-        //                 type: [{
-        //                     day: String,
-        //                     waterRateForThisDay: Number,
-        //                     useForDay: {
-        //                         type: [{ id: String, time: String, amount: Number }],
-        //                     },
-        //                     allAmountforDay: Number
-        //                 }],
-        //             }
-        //         }],
-        //     default: []
-                     
-        // }
+        gender: {
+          type: String,
+          default: "",
+        },
         waters: {
             type: [{
                     day: String,
@@ -67,15 +47,19 @@ const userSchema = new Schema(
             default: []
                      
         }
+
     },
-    { versionKey: false, timestamps: true }
+
+  { versionKey: false, timestamps: true }
 );
 
 export const User = model("auth", userSchema);
 
 export const registerSchema = Joi.object({
-    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }),
-    password: Joi.string().min(8).max(64).required(),
+  email: Joi.string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
+  password: Joi.string().min(8).max(64).required(),
 });
 export const waterRateSchema = Joi.object({
     waterRate: Joi.number().required().integer().min(100).max(15000)
@@ -97,3 +81,15 @@ export const waterUpdateSchema = Joi.object({
     }),
     waterAmount: Joi.number().integer().min(1).max(5000)
 })
+
+export const updateUserInfoSchema = Joi.object({
+  email: Joi.string().email({
+    minDomainSegments: 2,
+    tlds: { allow: ["com", "net"] },
+  }),
+  password: Joi.string().min(8).max(64),
+  name: Joi.string(),
+  gender: Joi.string(),
+  waterRate: Joi.number(),
+});
+

@@ -26,7 +26,6 @@ export const addWaterController = async (req, res) => {
         day,
         month: months[Number(month) - 1],
         year,
-        "waterRateForThisDay": waterRate,
         time,
         amount: waterAmount
     }

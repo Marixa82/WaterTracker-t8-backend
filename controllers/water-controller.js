@@ -20,7 +20,6 @@ export const addWaterController = async (req, res) => {
     if (date.includes('/')) sep = '/'
     else if (date.includes('-')) sep = '-'
     const [day, month, year] = date.split(sep);
-    const { waterRate } = await User.findById(id);
 
     const waterData = {
         day,

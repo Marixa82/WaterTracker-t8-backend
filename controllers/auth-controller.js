@@ -15,17 +15,12 @@ export const registerController = async (req, res) => {
     }
     const avatarURL = gravatar.url(email);
     const hashPass = await bcryptjs.hash(password, 10);
-    // const verificationToken = nanoid();
-    const newUser = await User.create({ email, password: hashPass, avatarURL });
-
-    const payload = { id: newUser.id }
-    const token = jwt.sign(payload, JWT_SECRET)
-    await User.findByIdAndUpdate(newUser.id, { token }, { new: true });
+    const index = email.split('').findIndex(symbol => symbol === "@");
+    const name = email.slice(0, index)
+    await User.create({ email, password: hashPass, avatarURL, name });
 
     res.status(201).json({
-        "message": "New user is created",
-        email,
-        token
+        "message": "New user is created"
     });
 }
 
@@ -37,9 +32,6 @@ export const loginController = async (req, res) => {
         throw HttpError(401, "Email or password is wrong");
     };
 
-    // if (!user.verify) {
-    //     throw HttpError(401, "Email is not verified");
-    // }
     const isCorrectPass = await bcryptjs.compare(password, user.password);
 
     if (!isCorrectPass) {
@@ -50,10 +42,8 @@ export const loginController = async (req, res) => {
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '23h' })
     await User.findByIdAndUpdate(user._id, { token }, { new: true });
     res.status(200).json({
-        "message": "Login successful",
+        "message": `Login '${email}' successful`,
         token,
-        'email': user.email,
-        "avatar": user.avatar
     })
 }
 

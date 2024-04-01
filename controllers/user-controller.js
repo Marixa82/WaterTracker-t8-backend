@@ -1,9 +1,21 @@
+import Jimp from "jimp";
 import { User } from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 
 export const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
+  const allowedFormats = ["png", "jpeg"];
+
+  const image = await Jimp.read(tempUpload);
+
+  const format = image.getExtension();
+  if (!allowedFormats.includes(format)) {
+    throw new Error("Формат зображення не підтримується.");
+  }
+
+  image.resize(28, 28);
+  await image.writeAsync(tempUpload);
 
   const filename = `${_id}_${originalname}`;
 

@@ -16,6 +16,8 @@ export const waterRateController = async (req, res) => {
 export const addWaterController = async (req, res) => {
     const { id } = req.user;
     const { date, time, waterAmount } = req.body;
+    const { waterRate, watersForDay } = await User.findById(id);
+    
     let sep
     if (date.includes('/')) sep = '/'
     else if (date.includes('-')) sep = '-'
@@ -30,6 +32,23 @@ export const addWaterController = async (req, res) => {
     }
 
     await User.findByIdAndUpdate(id, { $push: { waters: waterData } }, { new: true });
+    const findDay = watersForDay.find(water => water.year === year && water.month === months[Number(month) - 1] && water.day === day)
+    if (!findDay) {
+        const dataAboutDay = {
+            day,
+            month: months[Number(month) - 1],
+            year,
+            waterRateForThisDay: waterRate,
+            allAmountForDay: waterAmount
+        }
+        await User.findByIdAndUpdate(id, { $push: { watersForDay: dataAboutDay} }, { new: true });
+    };
+
+    findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
+
+    await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+    await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+
     return res.json({
         "message": "New water portion is added successful",
         waterData
@@ -39,11 +58,19 @@ export const addWaterController = async (req, res) => {
 export const deleteWaterController = async (req, res) => {
     const { id} = req.user
     const { id: waterId } = req.params;
-    const {waters} = await User.findById(id);
+    const {waters, watersForDay} = await User.findById(id);
     const waterPortion = waters.find(water => water._id.toString() === waterId);
     if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
 
     await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
+    const findDay = watersForDay.find(water => water.year === waterPortion.year && water.month === waterPortion.month && water.day === waterPortion.day)
+    if (findDay) {
+        findDay.allAmountForDay = findDay.allAmountForDay - waterPortion.amount;
+
+        await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+        await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+    }
+
     return res.status(204).json()
 
 };
@@ -52,21 +79,31 @@ export const updateWaterController = async (req, res) => {
     const { id } = req.user
     const { id: waterId } = req.params;
     const { time, waterAmount } = req.body;
-    const { waters } = await User.findById(id);
+    const { waters, watersForDay } = await User.findById(id);
     const waterPortion = waters.find(water => water._id.toString() === waterId);
+    
     if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
     
     if (!time && !waterAmount) throw HttpError(400, "Must be at least one field");
     if (time) waterPortion.time = time
-    if (waterAmount) waterPortion.amount = waterAmount
+    if (waterAmount) {
+        const findDay = watersForDay.find(water => water.year === waterPortion.year && water.month === waterPortion.month && water.day === waterPortion.day)
+        if (findDay) {
+            findDay.allAmountForDay = (findDay.allAmountForDay + waterAmount - waterPortion.amount);
+            await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+            await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+        };
+        waterPortion.amount = waterAmount;
+
+    }
 
     await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
     await User.findByIdAndUpdate(id, { $push: { waters: { ...waterPortion } } }, { new: true })
+
     return res.json({
         "message": "Water portion is updated successful",
         waterPortion
     })
-
 };
 
 export const getWaterInfoTodayController = async (req, res) => {
@@ -76,27 +113,27 @@ export const getWaterInfoTodayController = async (req, res) => {
     if (date.includes('/')) sep = '/'
     else if (date.includes('-')) sep = '-'
     const [day, month, year] = date.split(sep);
-    const { waterRate } = await User.findById(id)
+    const { waters, watersForDay } = await User.findById(id)
+    const portionsOfWater = waters.filter(water => water.day === day && water.month === months[Number(month) - 1] && water.year === year)
+        .map(water => ({ "time": water.time, "amount": water.amount, "id": water._id }));
+    const findDay = watersForDay.find(water => water.year === year && water.month === months[Number(month) - 1] && water.day === day)
+    if (portionsOfWater.length !== 0 && findDay) {
+        return res.json({
+            day,
+            month: months[Number(month) - 1],
+            year,
+            waterRateForThisDay: findDay.waterRateForThisDay,
+            allAmountForDay: findDay.allAmountForDay,
+            perc: `${findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)}%`,
+            portionsOfWater
+        })
+    }
 
-    const { waters } = await User.findById(id);
-    const watersInfo = waters.filter(water => water.year === year && water.month === months[Number(month) - 1] && water.day === day);
-    if(watersInfo.length === 0) return res.json({watersForDay: watersInfo})
-    const allAmountForDay = watersInfo.reduce((acc, water) => acc += water.amount, 0);
-    const dataAboutDay = {
+    return res.json({
         day,
         month: months[Number(month) - 1],
         year,
-        waterRateForThisDay: waterRate,
-        allAmountForDay,
-    }
-
-    await User.findByIdAndUpdate(id, { $push: { watersForDay: dataAboutDay } }, { new: true });
-    return res.json({
-        watersForDay:
-        {
-            ...dataAboutDay,
-            part: `${allAmountForDay / (waterRate / 100)}%`
-        }
+        portionsOfWater
     })
 
-}
+};

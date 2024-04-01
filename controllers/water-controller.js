@@ -44,7 +44,7 @@ export const deleteWaterController = async (req, res) => {
     if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
 
     await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
-    return res.status(204)
+    return res.status(204).json()
 
 };
 

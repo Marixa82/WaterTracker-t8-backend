@@ -40,7 +40,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/RegistrationRequest"}
+            "schema":{"$ref": "#/components/schemas/RegistrationRequest"}
            }
          } 
         },
@@ -49,12 +49,12 @@
             "description": "New user is created",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/RegistrationResponse"}
+                "schema":{"$ref": "#/components/schemas/RegistrationResponse"}
               }
             }
           },
           "400":{
-            "description": "Bad Request",
+            "description": "Email or password is Invalid",
             "content": {
             "application/json":{
                 "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
@@ -82,7 +82,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/LoginRequest"}
+            "schema":{"$ref": "#/components/schemas/RegistrationRequest"}
            }
          } 
         },
@@ -91,7 +91,7 @@
             "description": "Login successful",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/LoginResponse"}
+                "schema":{"$ref": "#/components/schemas/LoginResponse"}
               }
             }
           },
@@ -99,7 +99,7 @@
             "description": "Bad Request",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
               }
             }
           },
@@ -107,7 +107,7 @@
             "description": "Conflict",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
               }
             }
           }
@@ -119,21 +119,25 @@
         "post":{
             "tags": ["Auth"],
             "summary": "User logout",
+            "security": [{"Bearer":[]}],
             "requestBody":{
                 "description": "Logout user",
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/LogoutRequest"}
+            "schema":{"$ref": "#/components/schemas/LogoutRequest"}
            }
          } 
         },
         "responses": {
+          "204": {
+            "description": "User logout successfully"
+          },
           "401":{
-            "description": "Not authorized",
+            "description": "Bearer auth failed",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/LogoutResponse"}
+                "schema":{"$ref": "#/components/schemas/LogoutResponse"}
               }
             }
           }
@@ -151,7 +155,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserAvatarRequest"}
+            "schema":{"$ref": "#/components/schemas/UserAvatarRequest"}
            }
          } 
         },
@@ -160,7 +164,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserAvatarResponse"}
+                "schema":{"$ref": "#/components/schemas/UserAvatarResponse"}
               }
             }
           },
@@ -168,7 +172,7 @@
             "description": "Bad Request",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
               }
             }
           },
@@ -176,7 +180,7 @@
             "description": "Conflict",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
               }
             }
           }
@@ -193,7 +197,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
            }
          } 
         },
@@ -202,7 +206,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
               }
             }
           },
@@ -210,7 +214,7 @@
             "description": "Not found",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
               }
             }
           }
@@ -225,7 +229,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserUpdateInfoRequest"}
+            "schema":{"$ref": "#/components/schemas/UserUpdateInfoRequest"}
            }
          } 
         },
@@ -234,7 +238,7 @@
             "description": "User's info  updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserUpdateInfoResponse"}
+                "schema":{"$ref": "#/components/schemas/UserUpdateInfoResponse"}
               }
             }
           },
@@ -242,7 +246,7 @@
             "description": "Not found",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
               }
             }
           }
@@ -259,7 +263,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/WaterUpdateRequest"}
+            "schema":{"$ref": "#/components/schemas/WaterUpdateRequest"}
            }
          } 
         },
@@ -268,7 +272,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/WaterUpdateResponse"}
+                "schema":{"$ref": "#/components/schemas/WaterUpdateResponse"}
               }
             }
           },
@@ -276,7 +280,7 @@
             "description": "Bad Request",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
               }
             }
           },
@@ -284,7 +288,7 @@
             "description": "Conflict",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
               }
             }
           }
@@ -301,7 +305,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
            }
          } 
         },
@@ -310,7 +314,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
               }
             }
           },
@@ -318,7 +322,7 @@
             "description": "Not found",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
               }
             }
           }
@@ -335,7 +339,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
            }
          } 
         },
@@ -344,7 +348,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
               }
             }
           },
@@ -352,7 +356,7 @@
             "description": "Not found",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
               }
             }
           }
@@ -367,7 +371,7 @@
             "required": true,
         "content": {
            "application/json":{
-            "schema":{"$ref": "#components/schemas/UserInfoRequest"}
+            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
            }
          } 
         },
@@ -376,7 +380,7 @@
             "description": "User avatar is updated success",
             "content": {
               "application/json":{
-                "schema":{"$ref": "#components/schemas/UserInfoResponse"}
+                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
               }
             }
           },
@@ -384,7 +388,7 @@
             "description": "Not found",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorNotFoundResponse"}
+                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
               }
             }
           }
@@ -417,26 +421,18 @@
         }
       },
       "RegistrationResponse":{
+        
         "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Unique identifier of the user",
-                "example": "65b55865b6b2ac84bc52a78y"
-              },
-              "email": {
-                "type": "string",
-                "format": "email",
-                "description": "Email address of the user",
-                "example": "testUser@gmail.com"
-              }
-            }
-          }
-        }
-      },
+          "properties": {
+            "status": {
+              "type": "string",
+              "description": "201"
+            },
+            "message": {
+              "type": "string",
+              "description": "New user is created"
+            }}
+       },
       "LoginRequest":{
         "type": "object",
         "required": ["email", "password"],
@@ -452,8 +448,8 @@
             "description": "User's password",
             "format": "password",
             "example": "qwerty12345",
-            "minimum": 8,
-            "maximum": 64
+            "minLength": 8,
+            "maxLength": 64
           }
         }
       },
@@ -512,30 +508,29 @@
         }
       },
       "LogoutRequest":{
+        "required": [
+          "token"
+        ],
         "type": "object",
-        "required": ["email", "password"],
         "properties": {
-          "email":{
+          "token":{
             "type": "string",
-            "description": "User's email",
-            "format": "email",
-            "pattern": "allow:[com, net]"
-          },
-          "password":{
-            "type": "string",
-            "description": "User's password",
-            "format": "password",
-            "example": "qwerty12345",
-            "minimum": 8,
-            "maximum": 64
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDkzZmI1MDZkODliOTVhMzUzYjA5MSIsImlhdCI6MTcxMTg4MjI5MiwiZXhwIjoxNzExOTY1MDkyfQ.vbNFdkvoj65pEUFSYjCSOO01CVZlfuY5LDDf-b35ns4"
           }
         }
       },
       "LogoutResponse": {
         "type": "object",
-        "properties": {
-       
-        }
+          "properties": {
+            "status": {
+              "type": "string",
+              "description": "204"
+            },
+            "message": {
+              "type": "string",
+              "description": "User logout successfully"
+            }}
       },
       "UserAvatarRequest":{
         "required": [
@@ -633,9 +628,9 @@
         "type": "object",
         "properties": {
           "status":{
-            "type": "integer",
-            "description": "Error status code",
-            "example": 400
+            "type": "string",
+            "description": "400"
+            
           },
           "message": {
             "type": "string",
@@ -648,9 +643,9 @@
         "type": "object",
         "properties": {
           "status":{
-            "type": "integer",
-            "description": "Error status code",
-            "example": 409
+            "type": "string",
+            "description": "409"
+            
           },
           "message": {
             "type": "string",
@@ -663,9 +658,8 @@
         "type": "object",
         "properties": {
           "status":{
-            "type": "integer",
-            "description": "Error status code",
-            "example": 401
+            "type": "string",
+            "description": "401"
           },
           "message": {
             "type": "string",
@@ -678,9 +672,8 @@
         "type": "object",
         "properties": {
           "status":{
-            "type": "integer",
-            "description": "Error status code",
-            "example": 404
+            "type": "string",
+            "description": "404"
           },
           "message": {
             "type": "string",
@@ -693,9 +686,8 @@
         "type": "object",
         "properties": {
           "status":{
-            "type": "integer",
-            "description": "Error status code",
-            "example": 500
+            "type": "string",
+            "description": "500"
           },
           "message": {
             "type": "string",
@@ -704,7 +696,13 @@
           }
         }
       }
-    }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     
   }
-}
+}}

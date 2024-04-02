@@ -104,3 +104,8 @@ export const updateUserInfoSchema = Joi.object({
   waterRate: Joi.number(),
 });
 
+export const waterTodaySchema = Joi.object({
+    date: Joi.string().regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/).required().messages({
+        "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
+    })
+});

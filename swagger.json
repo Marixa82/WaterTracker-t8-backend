@@ -57,7 +57,7 @@
             "description": "Email or password is Invalid",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorBadRequestResponse"}
+                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
               }
             }
           },
@@ -65,7 +65,7 @@
             "description": "Conflict",
             "content": {
             "application/json":{
-                "schema":{"$ref": "#components/schemas/errorConflictResponse"}
+                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
               }
             }
           }

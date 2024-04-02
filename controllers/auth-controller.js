@@ -15,12 +15,14 @@ export const registerController = async (req, res) => {
     }
     const avatarURL = gravatar.url(email);
     const hashPass = await bcryptjs.hash(password, 10);
+
     const index = email.split('').findIndex(symbol => symbol === "@");
     const name = email.slice(0, index)
     await User.create({ email, password: hashPass, avatarURL, name });
 
     res.status(201).json({
         "message": "New user is created"
+
     });
 }
 
@@ -37,7 +39,7 @@ export const loginController = async (req, res) => {
     if (!isCorrectPass) {
         throw HttpError(401, "Email or password is wrong");
     }
-
+    
     const payload = { id: user.id };
     const token = jwt.sign(payload, JWT_SECRET, { expiresIn: '23h' })
     await User.findByIdAndUpdate(user._id, { token }, { new: true });

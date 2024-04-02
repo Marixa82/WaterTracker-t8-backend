@@ -1,30 +1,34 @@
 import Jimp from "jimp";
 import { User } from "../models/userModel.js";
-import { fileURLToPath } from "url";
-import path from "path";
-import fs from "fs/promises";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const avatarsDir = path.join(__dirname, "..", "public", "avatars");
+import { v2 as cloudinary } from "cloudinary";
 
 export const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
+  const allowedFormats = ["png", "jpeg"];
+
+  const image = await Jimp.read(tempUpload);
+
+  const format = image.getExtension();
+  if (!allowedFormats.includes(format)) {
+    throw new Error("Формат зображення не підтримується.");
+  }
+
+  image.resize(28, 28);
+  await image.writeAsync(tempUpload);
 
   const filename = `${_id}_${originalname}`;
-  const resultUpload = path.join(avatarsDir, filename);
-  await fs.rename(tempUpload, resultUpload);
 
-  const avatarURL = path.join("avatars", filename);
-  const image = await Jimp.read(resultUpload);
-  image.resize(28, 28);
-  image.writeAsync(resultUpload);
+  const cloudinaryResult = await cloudinary.uploader.upload(tempUpload, {
+    folder: "avatars",
+    public_id: filename,
+    overwrite: true,
+  });
 
-  await User.findByIdAndUpdate(_id, { avatarURL });
+  await User.findByIdAndUpdate(_id, { avatarURL: cloudinaryResult.secure_url });
 
   res.json({
-    avatarURL,
+    avatarURL: cloudinaryResult.secure_url,
   });
 };
 

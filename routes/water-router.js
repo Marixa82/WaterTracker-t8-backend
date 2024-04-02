@@ -6,6 +6,7 @@ import {
   deleteWaterController,
   updateWaterController,
   getWaterInfoPerMonthController,
+  getWaterInfoTodayController,
 } from "../controllers/water-controller.js";
 import { authValidation, isValidId } from "../middlewares/index.js";
 import { ctrlWrapper, validateBody } from "../helpers/index.js";
@@ -14,6 +15,7 @@ import {
   waterRateSchema,
   waterUpdateSchema,
   waterMonthSchema,
+  waterTodaySchema,
 } from "../models/userModel.js";
 
 export const waterRouter = express.Router();
@@ -49,3 +51,4 @@ waterRouter.get(
   validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );
+waterRouter.get('/today', authValidation, validateBody(waterTodaySchema), ctrlWrapper(getWaterInfoTodayController));

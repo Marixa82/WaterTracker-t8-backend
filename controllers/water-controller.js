@@ -120,8 +120,8 @@ export const getWaterInfoPerMonthController = async (req, res) => {
 
       const infoPerMonth = {
         totalDrinkingWater: waters.filter(
-          (portion) => (mo === portion.month && year === portion.year).length
-        ),
+          (portion) => mo === portion.month && year === portion.year
+        ).length,
         date: `${forDay.day}, ${forDay.month}`,
         dailyNorm:
           numberOfZeros > 1

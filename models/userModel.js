@@ -32,7 +32,7 @@ const userSchema = new Schema(
     gender: {
       type: String,
       enum: ["male", "female"],
-      default: null,
+      default: "",
     },
     waters: {
       type: [
@@ -141,4 +141,13 @@ export const updateUserInfoSchema = Joi.object({
   name: Joi.string(),
   gender: Joi.string(),
   waterRate: Joi.number(),
+});
+
+export const waterMonthSchema = Joi.object({
+  date: Joi.string()
+    .regex(/^(0?[1-9]|1[012])[\/\-]\d{4}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "date must be in format MM/YYYY or MM-YYYY",
+    }),
 });

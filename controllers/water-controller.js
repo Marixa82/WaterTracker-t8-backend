@@ -104,10 +104,11 @@ export const getWaterInfoPerMonthController = async (req, res) => {
   let sep;
   if (date.includes("/")) sep = "/";
   else if (date.includes("-")) sep = "-";
-  const [day, month, year] = date.split(sep);
+  const [month, year] = date.split(sep);
   const mo = months[Number(month) - 1];
 
   const { watersForDay, waters } = await User.findById(id);
+
   let waterForMonth = [];
 
   watersForDay.forEach((forDay) => {
@@ -118,7 +119,9 @@ export const getWaterInfoPerMonthController = async (req, res) => {
         .filter((char) => char === "0").length;
 
       const infoPerMonth = {
-        totalDrinkingWater: waters.length,
+        totalDrinkingWater: waters.filter(
+          (portion) => (mo === portion.month && year === portion.year).length
+        ),
         date: `${forDay.day}, ${forDay.month}`,
         dailyNorm:
           numberOfZeros > 1

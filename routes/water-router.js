@@ -12,7 +12,7 @@ import {
   waterAddedSchema,
   waterRateSchema,
   waterUpdateSchema,
-  waterTodaySchema,
+  waterMonthSchema,
 } from "../models/userModel.js";
 
 export const waterRouter = express.Router();
@@ -45,6 +45,6 @@ waterRouter.delete(
 waterRouter.get(
   "/per_month",
   authValidation,
-  validateBody(waterTodaySchema),
+  validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );

@@ -126,7 +126,7 @@ export const getWaterInfoTodayController = async (req, res) => {
             year,
             waterRateForThisDay: findDay.waterRateForThisDay,
             allAmountForDay: findDay.allAmountForDay,
-            perc: `${findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)}%`,
+            perc: `${(findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)).toFixed(2)}%`,
             portionsOfWater
         })
     }

@@ -42,12 +42,14 @@ export const addWaterController = async (req, res) => {
             allAmountForDay: waterAmount
         }
         await User.findByIdAndUpdate(id, { $push: { watersForDay: dataAboutDay} }, { new: true });
-    };
-
-    findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
-
-    await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
-    await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+    }
+    else {
+        findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
+    
+        await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+        await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+    
+    }
 
     return res.json({
         "message": "New water portion is added successful",

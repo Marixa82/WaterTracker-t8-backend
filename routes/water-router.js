@@ -13,4 +13,3 @@ waterRouter.put('/:id', authValidation, isValidId, validateBody(waterUpdateSchem
 waterRouter.delete('/:id', authValidation, isValidId, ctrlWrapper(deleteWaterController));
 
 waterRouter.get('/today', authValidation, validateBody(waterTodaySchema), ctrlWrapper(getWaterInfoTodayController));
-// waterRouter.get('/today', authValidation, validateBody(), ctrlWrapper(getWaterInfoMonthController));

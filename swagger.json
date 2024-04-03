@@ -1,10 +1,10 @@
 
- {"openapi": "3.0.0",
+{
+  "openapi": "3.0.0",
   "info": {
-    "version": "1.0.8",
     "title": "WaterTracker",
-    "description": ""
-    
+    "description": "",
+    "version": "1.0.8"
   },
   "servers": [
     {
@@ -16,523 +16,518 @@
     }
   ],
   "tags": [
-        {
-            "name": "Auth",
-            "description": "Authorization endpoints"
-        },
-        {
-            "name": "User",
-            "description": "User basic information"
-        },
-        {
-            "name": "Waters",
-            "description": "Waters endpoints"
-        }
-        
-    ],
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User basic information"
+    },
+    {
+      "name": "Waters",
+      "description": "Waters endpoints"
+    }
+  ],
   "paths": {
     "/api/auth/register": {
-        "post":{
-            "tags": ["Auth"],
-            "summary": "User registration",
-            "requestBody":{
-                "description": "Registration user",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/RegistrationRequest"}
-           }
-         } 
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User registration",
+        "requestBody": {
+          "description": "Registration user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
-          "201":{
+          "201": {
             "description": "New user is created",
             "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/RegistrationResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
               }
             }
           },
-          "400":{
+          "400": {
             "description": "Email or password is Invalid",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
               }
             }
           },
-           "409":{
+          "409": {
             "description": "Conflict",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
               }
             }
           }
         }
-
-        }
+      }
     },
     "/api/auth/login": {
-        "post":{
-            "tags": ["Auth"],
-            "summary": "User login",
-            "requestBody":{
-                "description": "Login user",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/RegistrationRequest"}
-           }
-         } 
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login",
+        "requestBody": {
+          "description": "Login user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
         },
         "responses": {
-          "200":{
+          "200": {
             "description": "Login successful",
             "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/LoginResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
               }
             }
           },
-          "400":{
+          "400": {
             "description": "Bad Request",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
               }
             }
           },
-           "409":{
+          "409": {
             "description": "Conflict",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
               }
             }
           }
         }
-
-        }
+      }
     },
     "/api/auth/logout": {
-        "post":{
-            "tags": ["Auth"],
-            "summary": "User logout",
-            "security": [{"Bearer":[]}],
-            "requestBody":{
-                "description": "Logout user",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/LogoutRequest"}
-           }
-         } 
-        },
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User logout",
+        "description": "Logout user",
         "responses": {
           "204": {
             "description": "User logout successfully"
           },
-          "401":{
+          "401": {
             "description": "Bearer auth failed",
             "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/LogoutResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogoutResponse"
+                }
               }
             }
           }
-          
-        }
-
-        }
-    },
-    "/api/user/avatars":{
-      "patch":{
-            "tags": ["User"],
-            "summary": "User's avatar",
-            "requestBody":{
-                "description": "Update user avatar",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserAvatarRequest"}
-           }
-         } 
         },
-        "responses": {
-          "200":{
-            "description": "User avatar is updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserAvatarResponse"}
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/avatars": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's avatar",
+        "requestBody": {
+          "description": "Add  user avatar",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAvatarRequest"
               }
             }
           },
-          "400":{
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is add success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
             "description": "Bad Request",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
               }
             }
           },
-           "409":{
+          "409": {
             "description": "Conflict",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
               }
             }
           }
         }
-
-        }
+      }
     },
-    "/api/user/:id":{
-       "get":{
-            "tags": ["User"],
-            "summary": "User's info",
-            "requestBody":{
-                "description": "Get user info",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
-           }
-         } 
-        },
+    "/api/user/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's info",
+        "description": "Get user info",
+        "parameters": [],
         "responses": {
-          "200":{
+          "200": {
             "description": "User avatar is updated success",
             "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
               }
             }
           },
-          "404":{
+          "404": {
             "description": "Not found",
             "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
               }
             }
-          }
-        }
-
-        },
-        "put":{
-            "tags": ["User"],
-            "summary": "User's update info",
-            "requestBody":{
-                "description": "User's new info",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserUpdateInfoRequest"}
-           }
-         } 
-        },
-        "responses": {
-          "200":{
-            "description": "User's info  updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserUpdateInfoResponse"}
-              }
-            }
-          },
-          "404":{
-            "description": "Not found",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
-              }
-            }
-          }
-        }
-
-        }
-    },
-    "/api/waters/water_rate":{
-      "patch":{
-            "tags": ["Waters"],
-            "summary": "User's avatar",
-            "requestBody":{
-                "description": "Update user avatar",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/WaterUpdateRequest"}
-           }
-         } 
-        },
-        "responses": {
-          "200":{
-            "description": "User avatar is updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/WaterUpdateResponse"}
-              }
-            }
-          },
-          "400":{
-            "description": "Bad Request",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorBadRequestResponse"}
-              }
-            }
-          },
-           "409":{
-            "description": "Conflict",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorConflictResponse"}
-              }
-            }
-          }
-        }
-
-        }
-    },
-    "/api/waters":{
-      "put":{
-            "tags": ["Waters"],
-            "summary": "User's info",
-            "requestBody":{
-                "description": "Get user info",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
-           }
-         } 
-        },
-        "responses": {
-          "200":{
-            "description": "User avatar is updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
-              }
-            }
-          },
-          "404":{
-            "description": "Not found",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
-              }
-            }
-          }
-        }
-
-        }
-    },
-    "/api/waters/:id":{
-      "put":{
-            "tags": ["Waters"],
-            "summary": "User's info",
-            "requestBody":{
-                "description": "Get user info",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
-           }
-         } 
-        },
-        "responses": {
-          "200":{
-            "description": "User avatar is updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
-              }
-            }
-          },
-          "404":{
-            "description": "Not found",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
-              }
-            }
-          }
-        }
-
-        },
-        "delete":{
-            "tags": ["Waters"],
-            "summary": "User's info",
-            "requestBody":{
-                "description": "Get user info",
-            "required": true,
-        "content": {
-           "application/json":{
-            "schema":{"$ref": "#/components/schemas/UserInfoRequest"}
-           }
-         } 
-        },
-        "responses": {
-          "200":{
-            "description": "User avatar is updated success",
-            "content": {
-              "application/json":{
-                "schema":{"$ref": "#/components/schemas/UserInfoResponse"}
-              }
-            }
-          },
-          "404":{
-            "description": "Not found",
-            "content": {
-            "application/json":{
-                "schema":{"$ref": "#/components/schemas/errorNotFoundResponse"}
-              }
-            }
-          }
-        }
-
-        }
-    }
-    
-  },
-  "components": {
-    "schemas": {
-      "RegistrationRequest":{
-        "type": "object",
-        "required": ["email", "password"],
-        "properties": {
-          "email":{
-            "type": "string",
-            "description": "User's email",
-            "format": "email",
-            "pattern": "allow:[com, net]"
-          },
-          "password":{
-            "type": "string",
-            "description": "User's password",
-            "format": "password",
-            "example": "qwerty12345",
-            "minimum": 8,
-            "maximum": 64
           }
         }
       },
-      "RegistrationResponse":{
-        
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's update info",
+        "requestBody": {
+          "description": "User's new info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User's info  updated success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserUpdateInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waters/water_rate": {
+      "patch": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User's avatar",
+        "requestBody": {
+          "description": "Update user avatar",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterUpdateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waters": {
+      "put": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User's info",
+        "requestBody": {
+          "description": "Get user info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/waters/:id": {
+      "put": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User's info",
+        "requestBody": {
+          "description": "Get user info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User's info",
+        "description": "Get user info",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User avatar is updated success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
         "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "description": "201"
-            },
-            "message": {
-              "type": "string",
-              "description": "New user is created"
-            }}
-       },
-      "LoginRequest":{
-        "type": "object",
-        "required": ["email", "password"],
         "properties": {
-          "email":{
+          "email": {
+            "pattern": "allow:[com, net]",
             "type": "string",
             "description": "User's email",
-            "format": "email",
-            "pattern": "allow:[com, net]"
+            "format": "email"
           },
-          "password":{
+          "password": {
+            "maximum": 64,
+            "minimum": 8,
             "type": "string",
             "description": "User's password",
             "format": "password",
-            "example": "qwerty12345",
-            "minLength": 8,
-            "maxLength": 64
+            "example": "qwerty12345"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "201"
+          },
+          "message": {
+            "type": "string",
+            "description": "New user is created"
           }
         }
       },
       "LoginResponse": {
         "required": [
-          "user",
           "token"
         ],
         "type": "object",
         "properties": {
-          "token":{
+          "message": {
             "type": "string",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDkzZmI1MDZkODliOTVhMzUzYjA5MSIsImlhdCI6MTcxMTg4MjI5MiwiZXhwIjoxNzExOTY1MDkyfQ.vbNFdkvoj65pEUFSYjCSOO01CVZlfuY5LDDf-b35ns4"
+            "example": "Login UserEmail successful"
           },
-          "user":{
-            "required":[
-              "name",
-              "gender",
-              "avatarURL",
-              "waterRate",
-              "waters",
-              "watersForDay"],
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "default": "",
-                  "example": "UserName"
-                },
-                "gender":{
-                  "type": "string",
-                  "example": "female",
-                  "enum": [
-                    "male",
-                    "female"
-                  ],
-                  "default": null
-                },
-                "avatarURL":{
-                  "type": "string",
-                  "nullable": true,
-                  "default": null,
-                  "example": ""
-                },
-                "waterRate":{
-                  "type": "number",
-                  "default": "2000",
-                  "minimum": 0,
-                  "maximum": 15000
-
-                }
-              }
-            
-
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxNDYxNGM1MGRiMTNjNjk1N2MxMiIsImlhdCI6MTcxMjA2NzcyMiwiZXhwIjoxNzEyMTUwNTIyfQ.dftMsB6Sz2bzb5HEYmGWRgM9G3tAdTXVH0rYrxW4b6U"
           }
         }
       },
-      "LogoutRequest":{
+      "LogoutRequest": {
         "required": [
           "token"
         ],
         "type": "object",
         "properties": {
-          "token":{
+          "token": {
             "type": "string",
             "description": "User's token",
-            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDkzZmI1MDZkODliOTVhMzUzYjA5MSIsImlhdCI6MTcxMTg4MjI5MiwiZXhwIjoxNzExOTY1MDkyfQ.vbNFdkvoj65pEUFSYjCSOO01CVZlfuY5LDDf-b35ns4"
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxNDYxNGM1MGRiMTNjNjk1N2MxMiIsImlhdCI6MTcxMjA2NzcyMiwiZXhwIjoxNzEyMTUwNTIyfQ.dftMsB6Sz2bzb5HEYmGWRgM9G3tAdTXVH0rYrxW4b6U"
           }
         }
       },
       "LogoutResponse": {
         "type": "object",
-          "properties": {
-            "status": {
-              "type": "string",
-              "description": "204"
-            },
-            "message": {
-              "type": "string",
-              "description": "User logout successfully"
-            }}
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "204"
+          },
+          "message": {
+            "type": "string",
+            "description": "User logout successfully"
+          }
+        }
       },
-      "UserAvatarRequest":{
+      "UserAvatarRequest": {
         "required": [
           "avatar"
         ],
@@ -544,7 +539,7 @@
           }
         }
       },
-      "UserAvatarResponse":{
+      "UserAvatarResponse": {
         "required": [
           "avatarURL"
         ],
@@ -553,146 +548,262 @@
           "avatarURL": {
             "type": "string",
             "nullable": true,
-            "example": "",
-            "default": null
+            "example": ""
           }
         }
       },
-      "UserInfoRequest":{
-        "type": "object",
-        "required": ["id"],
-        "properties": {
-          "id": {
-                "type": "string",
-                "description": "Unique identifier of the user",
-                "example": "65b55865b6b2ac84bc52a78y"
-              }
-        }
-      },
-      "UserInfoResponse": {
+      "UserInfoRequest": {
         "required": [
-          "user",
           "id"
         ],
         "type": "object",
         "properties": {
           "id": {
-                "type": "string",
-                "description": "Unique identifier of the user",
-                "example": "65b55865b6b2ac84bc52a78y"
-              },
-          "user":{
-            "required":[
-              "name",
-              "gender",
-              "avatarURL",
-              "waterRate",
-              "waters",
-              "watersForDay"],
-              "type": "object",
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "default": "",
-                  "example": "UserName"
-                },
-                "gender":{
-                  "type": "string",
-                  "example": "female",
-                  "enum": [
-                    "male",
-                    "female"
-                  ],
-                  "default": null
-                },
-                "avatarURL":{
-                  "type": "string",
-                  "nullable": true,
-                  "default": null,
-                  "example": ""
-                },
-                "waterRate":{
-                  "type": "number",
-                  "default": "2000",
-                  "minimum": 0,
-                  "maximum": 15000
-
-                }
-              }
-            
-
+            "type": "string",
+            "description": "Unique identifier of the user",
+            "example": "65b55865b6b2ac84bc52a78y"
+          }
+        }
+      },
+      "UserInfoResponse": {
+        "required": [
+          "id",
+          "user"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the user",
+            "example": "65b55865b6b2ac84bc52a78y"
+          },
+          "user": {
+            "$ref": "#/components/schemas/UserInfoResponse_user"
           }
         }
       },
       "errorBadRequestResponse": {
         "type": "object",
         "properties": {
-          "status":{
+          "status": {
             "type": "string",
             "description": "400"
-            
           },
           "message": {
             "type": "string",
             "description": "Error message"
-           
           }
         }
       },
       "errorConflictResponse": {
         "type": "object",
         "properties": {
-          "status":{
+          "status": {
             "type": "string",
             "description": "409"
-            
           },
           "message": {
             "type": "string",
             "description": "Email in use"
-           
           }
         }
       },
       "errorUnauthorizedResponse": {
         "type": "object",
         "properties": {
-          "status":{
+          "status": {
             "type": "string",
             "description": "401"
           },
           "message": {
             "type": "string",
             "description": "Not authorized"
-           
           }
         }
       },
       "errorNotFoundResponse": {
         "type": "object",
         "properties": {
-          "status":{
+          "status": {
             "type": "string",
             "description": "404"
           },
           "message": {
             "type": "string",
             "description": "Not found"
-           
           }
         }
       },
       "errorServerResponse": {
         "type": "object",
         "properties": {
-          "status":{
+          "status": {
             "type": "string",
             "description": "500"
           },
           "message": {
             "type": "string",
             "description": "Server error"
-           
+          }
+        }
+      },
+      "UserUpdateInfoRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserUpdateInfoResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "WaterUpdateRequest": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "WaterUpdateResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserInfoResponse_user_waters": {
+        "required": [
+          "amount",
+          "day",
+          "month",
+          "time",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "day": {
+            "pattern": "^(0[1-9]|[1-2][0-9]|3[0-1])$",
+            "type": "string",
+            "description": "The day of the month (two digits)",
+            "format": "date"
+          },
+          "month": {
+            "type": "string",
+            "format": "date"
+          },
+          "year": {
+            "type": "integer",
+            "description": "Year",
+            "format": "int32",
+            "example": 2022
+          },
+          "time": {
+            "type": "string",
+            "format": "time",
+            "example": "770"
+          },
+          "amount": {
+            "type": "number",
+            "description": "The amount of water",
+            "example": 500
+          }
+        }
+      },
+      "UserInfoResponse_user_watersForDay": {
+        "required": [
+          "allAmountForDay",
+          "day",
+          "month",
+          "waterRateForThisDay",
+          "year"
+        ],
+        "type": "object",
+        "properties": {
+          "day": {
+            "pattern": "^(0[1-9]|[1-2][0-9]|3[0-1])$",
+            "type": "string",
+            "description": "The day of the month (two digits)",
+            "format": "date"
+          },
+          "month": {
+            "type": "string",
+            "format": "date"
+          },
+          "year": {
+            "type": "integer",
+            "description": "Year",
+            "format": "int32",
+            "example": 2022
+          },
+          "waterRateForThisDay": {
+            "type": "number",
+            "description": "The waterRate for this day",
+            "example": 2500
+          },
+          "allAmountForDay": {
+            "type": "number",
+            "description": "The all amount of water of this day",
+            "example": 500
+          }
+        }
+      },
+      "UserInfoResponse_user": {
+        "required": [
+          "avatarURL",
+          "email",
+          "gender",
+          "name",
+          "waterRate",
+          "waters",
+          "watersForDay"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email"
+          },
+          "name": {
+            "type": "string",
+            "example": "UserName",
+            "default": ""
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true,
+            "example": "female",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "avatarURL": {
+            "type": "string",
+            "nullable": true,
+            "example": ""
+          },
+          "waterRate": {
+            "maximum": 15000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "waters": {
+            "$ref": "#/components/schemas/UserInfoResponse_user_waters"
+          },
+          "watersForDay": {
+            "$ref": "#/components/schemas/UserInfoResponse_user_watersForDay"
           }
         }
       }
@@ -703,6 +814,6 @@
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
-    
+    }
   }
-}}
+}

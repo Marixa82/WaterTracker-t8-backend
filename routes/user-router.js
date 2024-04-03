@@ -17,12 +17,11 @@ userRouter.patch(
   ctrlWrapper(updateAvatar)
 );
 
-userRouter.get("/:id", authValidation, isValidId, ctrlWrapper(getUserInfo));
+userRouter.get("/current", authValidation, ctrlWrapper(getUserInfo));
 
 userRouter.put(
-  "/:id",
+  "/current",
   authValidation,
-  isValidId,
   validateBody(updateUserInfoSchema),
   ctrlWrapper(updateInfo)
 );

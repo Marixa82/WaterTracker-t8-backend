@@ -103,7 +103,11 @@ export const registerSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
   password: Joi.string().min(8).max(64).required(),
 });
+
 export const waterRateSchema = Joi.object({
+  date: Joi.string().regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/).required().messages({
+        "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
+  }),
   waterRate: Joi.number().required().integer().min(100).max(15000),
 });
 

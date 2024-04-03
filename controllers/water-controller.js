@@ -17,10 +17,24 @@ const months = [
 ];
 
 export const waterRateController = async (req, res) => {
-  const { waterRate } = req.body;
+  const { waterRate, date } = req.body;
   const { id } = req.user;
+  const {watersForDay} = await User.findById(id);
 
-  await User.findByIdAndUpdate(id, { waterRate });
+  let sep
+  if (date.includes('/')) sep = '/'
+  else if (date.includes('-')) sep = '-'
+  const [day, month, year] = date.split(sep);
+
+  await User.findByIdAndUpdate(id, { waterRate }, { new: true });
+  
+  const findDay = watersForDay.find(date => date.day === day && date.month === months[Number(month) - 1] && date.year === year);
+  if (findDay) {
+    findDay.waterRateForThisDay = waterRate
+    await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+    await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+  }
+
   res.status(200).json({
     "message": "Water Rate was changed successful",
   });
@@ -57,7 +71,7 @@ export const addWaterController = async (req, res) => {
         await User.findByIdAndUpdate(id, { $push: { watersForDay: dataAboutDay} }, { new: true });
     }
     else {
-        findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
+      findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
 
         await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
         await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
@@ -73,15 +87,15 @@ export const addWaterController = async (req, res) => {
 export const deleteWaterController = async (req, res) => {
     const { id} = req.user
     const { id: waterId } = req.params;
-    const {waters, watersForDay} = await User.findById(id);
+    const {waters, watersForDay, waterRate} = await User.findById(id);
     const waterPortion = waters.find(water => water._id.toString() === waterId);
     if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`)
 
     await User.findByIdAndUpdate(id, { $pull: { waters: { _id: waterId } } }, { new: true });
     const findDay = watersForDay.find(water => water.year === waterPortion.year && water.month === waterPortion.month && water.day === waterPortion.day)
     if (findDay) {
-        findDay.allAmountForDay = findDay.allAmountForDay - waterPortion.amount;
-
+      findDay.allAmountForDay = findDay.allAmountForDay - waterPortion.amount;
+      
         await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
         await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
     }
@@ -138,7 +152,7 @@ export const getWaterInfoTodayController = async (req, res) => {
       year,
       waterRateForThisDay: findDay.waterRateForThisDay,
       allAmountForDay: findDay.allAmountForDay,
-      perc: `${(findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)).toFixed(2)}%`,
+      percentageWater: `${(findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)).toFixed(2)}%`,
       portionsOfWater
     })
   }

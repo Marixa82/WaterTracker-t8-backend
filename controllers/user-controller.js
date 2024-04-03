@@ -54,7 +54,6 @@ export const getUserInfo = async (req, res) => {
 
 export const updateInfo = async (req, res) => {
   const { id } = req.user;
-  console.log(req.body)
   if (!req.body.email && !req.body.name && !req.body.gender && !req.body.password) return res.status(400).send({ "message": "Must be at least one field" });
   const result =
     (await User.findByIdAndUpdate(id, req.body, {

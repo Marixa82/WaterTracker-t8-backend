@@ -33,7 +33,7 @@ export const updateAvatar = async (req, res) => {
 };
 
 export const getUserInfo = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.user;
 
   const user = await User.findById(id).select(
     "avatarURL email name waterRate gender"
@@ -43,22 +43,32 @@ export const getUserInfo = async (req, res) => {
     return res.status(404).send({ message: "Not found" });
   }
 
-  res.status(200).send(user);
+  res.status(200).send({
+    avatarURL: user.avatarURL,
+    email: user.email,
+    name: user.name,
+    waterRate: user.waterRate,
+    gender: user.gender
+  });
 };
 
 export const updateInfo = async (req, res) => {
-  const { id } = req.params;
-
+  const { id } = req.user;
+  if (!req.body.email && !req.body.name && !req.body.gender && !req.body.password) return res.status(400).send({ "message": "Must be at least one field" });
   const result =
     (await User.findByIdAndUpdate(id, req.body, {
       new: true,
     })) || null;
 
-  console.log(result);
-
   if (result === null) {
     return res.status(404).send({ message: "Not found" });
   }
 
-  res.status(200).send(result);
+  res.status(200).send({
+    avatarURL: result.avatarURL,
+    email: result.email,
+    name: result.name,
+    waterRate: result.waterRate,
+    gender: result.gender
+  });
 };

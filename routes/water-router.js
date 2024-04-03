@@ -51,4 +51,9 @@ waterRouter.get(
   validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );
-waterRouter.get('/today', authValidation, validateBody(waterTodaySchema), ctrlWrapper(getWaterInfoTodayController));
+waterRouter.get(
+  "/today",
+  authValidation,
+  validateBody(waterTodaySchema),
+  ctrlWrapper(getWaterInfoTodayController)
+);

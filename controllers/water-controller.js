@@ -172,10 +172,10 @@ export const getWaterInfoPerMonthController = async (req, res) => {
         .filter((char) => char === "0").length;
 
       const infoPerMonth = {
-        totalDrinkingWater: waters.filter(
+        totalPortionsOfWater: waters.filter(
           (portion) => mo === portion.month && year === portion.year
         ).length,
-        date: `${forDay.day}, ${forDay.month}`,
+        date: `${(forDay.day[0] === '0') ? forDay.day.slice(1) : forDay.day}, ${forDay.month}`,
         dailyNorm:
           numberOfZeros > 1
             ? (Number(forDay.waterRateForThisDay) / 1000).toFixed(1) + " L"
@@ -191,9 +191,9 @@ export const getWaterInfoPerMonthController = async (req, res) => {
     }
   });
 
-  if (waterForMonth.length === 0) {
-    return res.status(404).json({ message: "Немає записів за цей місяць" });
-  }
-
-  return res.json(waterForMonth);
+  return res.status(200).json({
+      month: mo,
+      year,
+      waterForMonth
+    });
 };

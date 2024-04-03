@@ -1,7 +1,7 @@
 import { User } from "../models/userModel.js";
 import gravatar from "gravatar";
 import bcryptjs from "bcryptjs";
-import { HttpError, sendEmail } from "../helpers/index.js";
+import { HttpError, sendEmail, emailLetter } from "../helpers/index.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { randomUUID } from "crypto";
@@ -28,10 +28,11 @@ export const registerController = async (req, res) => {
     name,
     verificationCode,
   });
+
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${verificationCode}">Click</a>`,
+    html: emailLetter(verificationCode, BASE_URL),
   };
   await sendEmail(verifyEmail);
 
@@ -67,7 +68,7 @@ export const resendVerifyEmailController = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: `<a target="_blank" href="${BASE_URL}/api/auth/verify/${user.verificationCode}">Click</a>`,
+    html: emailLetter(user.verificationCode, BASE_URL),
   };
   await sendEmail(verifyEmail);
   res.json({
@@ -75,7 +76,7 @@ export const resendVerifyEmailController = async (req, res) => {
   });
 };
 
-export default async (req, res) => {
+export const loginController = async (req, res) => {
   const { password, email } = req.body;
   const user = await User.findOne({ email });
 
@@ -83,9 +84,9 @@ export default async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  if (!user.verify) {
-    throw HttpError(401, "Email not verified");
-  }
+  // if (!user.verify) {
+  //   throw HttpError(401, "Email not verified");
+  // }
 
   const isCorrectPass = await bcryptjs.compare(password, user.password);
 

@@ -38,7 +38,7 @@ export const getUserInfo = async (req, res) => {
   const { id } = req.user;
 
   const user = await User.findById(id).select(
-    "avatarURL email name waterRate gender"
+    "avatarURL email name waterRate gender verify"
   );
 
   if (!user) {
@@ -51,6 +51,7 @@ export const getUserInfo = async (req, res) => {
     name: user.name,
     waterRate: user.waterRate,
     gender: user.gender,
+    verify: user.verify,
   });
 };
 

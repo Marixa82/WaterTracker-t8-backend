@@ -113,6 +113,7 @@ export const registerSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
   password: Joi.string().min(8).max(64).required(),
 });
+
 export const waterRateSchema = Joi.object({
   waterRate: Joi.number().required().integer().min(100).max(15000),
 });

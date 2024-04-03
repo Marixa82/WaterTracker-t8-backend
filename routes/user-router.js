@@ -1,5 +1,5 @@
 import express from "express";
-import { authValidation, upload, isValidId } from "../middlewares/index.js";
+import { authValidation, upload } from "../middlewares/index.js";
 import {
   updateAvatar,
   getUserInfo,

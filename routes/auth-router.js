@@ -1,6 +1,7 @@
 import express from "express";
 import { ctrlWrapper, validateBody } from "../helpers/index.js";
-import loginController, {
+import {
+  loginController,
   logoutController,
   registerController,
   verifyEmailController,
@@ -18,6 +19,7 @@ authRouter.post(
 );
 
 authRouter.get("/verify/:verificationCode", ctrlWrapper(verifyEmailController));
+
 authRouter.post(
   "/verify",
   validateBody(emailSchema),

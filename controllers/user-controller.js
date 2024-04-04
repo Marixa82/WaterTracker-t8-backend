@@ -57,13 +57,9 @@ export const getUserInfo = async (req, res) => {
 
 export const updateInfo = async (req, res) => {
   const { id } = req.user;
-  const { email, password } = req.body;
-  if (
-    !req.body.email &&
-    !req.body.name &&
-    !req.body.gender &&
-    !req.body.password
-  )
+  const { email, password, name, gender, outdatedPassword } = req.body;
+
+  if (!email && !name && !gender && !password)
     throw HttpError(400, "Must be at least one field");
 
   const user = await User.findOne({ email });
@@ -71,12 +67,23 @@ export const updateInfo = async (req, res) => {
     throw HttpError(409, "Email in use");
   }
 
-  let hashPass;
-  if (password) {
-    hashPass = await bcryptjs.hash(password, 10);
+  if (outdatedPassword) {
+    if (!password) {
+      throw HttpError(400, "You forgot to enter your new password");
+    }
   }
 
-  req.body.password = hashedPassword;
+  let hashPass;
+  if (password) {
+    if (!outdatedPassword) {
+      throw HttpError(400, "You need to enter your outdated password.");
+    }
+    if (outdatedPassword === password) {
+      throw HttpError(400, "You must enter new password.");
+    }
+    hashPass = await bcryptjs.hash(password, 10);
+    req.body.password = hashPass;
+  }
 
   const result =
     (await User.findByIdAndUpdate(id, req.body, {
@@ -87,28 +94,24 @@ export const updateInfo = async (req, res) => {
     throw HttpError(404, "Not found");
   }
 
-  res.status(200).send({
-    avatarURL: result.avatarURL,
-    email: result.email,
-    name: result.name,
-    waterRate: result.waterRate,
-    gender: result.gender,
+  res.status(200).json({
+    message: "The user data change was successful.",
   });
 };
 
 export const deleteController = async (req, res) => {
-    const { id } = req.user;
-    const { email, password } = req.body;
-    const user = await User.findOne({email})
-    if (!user) {
-       throw HttpError(401, "Email or password is wrong"); 
-    }
-    const isCorrectPass = await bcryptjs.compare(password, user.password);
-     if (!isCorrectPass) {
-        throw HttpError(401, "Email or password is wrong");
-    }
-   
-    await User.findByIdAndDelete(id)
+  const { id } = req.user;
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(401, "Email or password is wrong");
+  }
+  const isCorrectPass = await bcryptjs.compare(password, user.password);
+  if (!isCorrectPass) {
+    throw HttpError(401, "Email or password is wrong");
+  }
 
-    res.status(204).json();
-}
+  await User.findByIdAndDelete(id);
+
+  res.status(204).json();
+};

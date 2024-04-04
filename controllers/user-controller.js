@@ -1,6 +1,8 @@
 import Jimp from "jimp";
 import { User } from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
+import bcryptjs from "bcryptjs";
+import { HttpError } from "../helpers/index.js";
 
 export const updateAvatar = async (req, res) => {
   const { _id } = req.user;
@@ -36,11 +38,11 @@ export const getUserInfo = async (req, res) => {
   const { id } = req.user;
 
   const user = await User.findById(id).select(
-    "avatarURL email name waterRate gender"
+    "avatarURL email name waterRate gender verify"
   );
 
   if (!user) {
-    return res.status(404).send({ message: "Not found" });
+    throw HttpError(404, "Not found");
   }
 
   res.status(200).send({
@@ -48,20 +50,41 @@ export const getUserInfo = async (req, res) => {
     email: user.email,
     name: user.name,
     waterRate: user.waterRate,
-    gender: user.gender
+    gender: user.gender,
+    verify: user.verify,
   });
 };
 
 export const updateInfo = async (req, res) => {
   const { id } = req.user;
-  if (!req.body.email && !req.body.name && !req.body.gender && !req.body.password) return res.status(400).send({ "message": "Must be at least one field" });
+  const { email, password } = req.body;
+  if (
+    !req.body.email &&
+    !req.body.name &&
+    !req.body.gender &&
+    !req.body.password
+  )
+    throw HttpError(400, "Must be at least one field");
+
+  const user = await User.findOne({ email });
+  if (user) {
+    throw HttpError(409, "Email in use");
+  }
+
+  let hashPass;
+  if (password) {
+    hashPass = await bcryptjs.hash(password, 10);
+  }
+
+  req.body.password = hashedPassword;
+
   const result =
     (await User.findByIdAndUpdate(id, req.body, {
       new: true,
     })) || null;
 
   if (result === null) {
-    return res.status(404).send({ message: "Not found" });
+    throw HttpError(404, "Not found");
   }
 
   res.status(200).send({
@@ -69,6 +92,6 @@ export const updateInfo = async (req, res) => {
     email: result.email,
     name: result.name,
     waterRate: result.waterRate,
-    gender: result.gender
+    gender: result.gender,
   });
 };

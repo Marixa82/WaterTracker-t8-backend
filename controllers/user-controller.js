@@ -95,3 +95,20 @@ export const updateInfo = async (req, res) => {
     gender: result.gender,
   });
 };
+
+export const deleteController = async (req, res) => {
+    const { id } = req.user;
+    const { email, password } = req.body;
+    const user = await User.findOne({email})
+    if (!user) {
+       throw HttpError(401, "Email or password is wrong"); 
+    }
+    const isCorrectPass = await bcryptjs.compare(password, user.password);
+     if (!isCorrectPass) {
+        throw HttpError(401, "Email or password is wrong");
+    }
+   
+    await User.findByIdAndDelete(id)
+
+    res.status(204).json();
+}

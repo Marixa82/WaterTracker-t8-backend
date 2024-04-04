@@ -26,7 +26,7 @@ waterRouter.patch(
   validateBody(waterRateSchema),
   ctrlWrapper(waterRateController)
 );
-waterRouter.put(
+waterRouter.post(
   "/",
   authValidation,
   validateBody(waterAddedSchema),

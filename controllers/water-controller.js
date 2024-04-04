@@ -284,7 +284,7 @@ export const getWaterInfoPerMonthController = async (req, res) => {
             (Number(forDay.allAmountForDay) /
               Number(forDay.waterRateForThisDay)) *
             100
-          ).toFixed(1) + " %",
+          ).toFixed(2) + " %",
       };
       waterForMonth.push(infoPerMonth);
     }

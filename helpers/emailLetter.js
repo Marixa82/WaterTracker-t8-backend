@@ -33,7 +33,7 @@ export const emailLetter = (verificationCode, BASE_URL) => {
                 more hydrated you!</p>
             <div style="text-align: center;"><a
                     style="background-color:#407bff;color:#ffffff;padding:10px 20px;text-decoration:none;font-weight:bold;border-radius:5px;display:inline-block;font-size:16px"
-                    href="${BASE_URL}/api/auth/verify/${verificationCode}" target="_blank">Log in now</a></div>
+                    href="${BASE_URL}/api/auth/verify/${verificationCode}" target="_blank" rel="noreferrer">Log in now</a></div>
         </div>
     `;
 };

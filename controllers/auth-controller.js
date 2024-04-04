@@ -54,3 +54,20 @@ export const logoutController = async (req, res) => {
     await User.findByIdAndUpdate(id, { token: null });
     res.status(204).json()
 }
+
+export const deleteController = async (req, res) => {
+    const { id } = req.user;
+    const { email, password } = req.body;
+    const user = await User.findOne({email})
+    if (!user) {
+       throw HttpError(401, "Email or password is wrong"); 
+    }
+    const isCorrectPass = await bcryptjs.compare(password, user.password);
+     if (!isCorrectPass) {
+        throw HttpError(401, "Email or password is wrong");
+    }
+   
+    await User.findByIdAndDelete(id)
+
+    res.status(204).json();
+}

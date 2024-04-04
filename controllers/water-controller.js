@@ -17,10 +17,24 @@ const months = [
 ];
 
 export const waterRateController = async (req, res) => {
-  const { waterRate } = req.body;
+  const { waterRate, date } = req.body;
   const { id } = req.user;
+  const {watersForDay} = await User.findById(id);
 
-  await User.findByIdAndUpdate(id, { waterRate });
+  let sep
+  if (date.includes('/')) sep = '/'
+  else if (date.includes('-')) sep = '-'
+  const [day, month, year] = date.split(sep);
+
+  await User.findByIdAndUpdate(id, { waterRate }, { new: true });
+  
+  const findDay = watersForDay.find(date => date.day === day && date.month === months[Number(month) - 1] && date.year === year);
+  if (findDay) {
+    findDay.waterRateForThisDay = waterRate
+    await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
+    await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
+  }
+
   res.status(200).json({
     message: "Water Rate was changed successful",
   });
@@ -70,6 +84,7 @@ export const addWaterController = async (req, res) => {
     );
   } else {
     findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
+
 
     await User.findByIdAndUpdate(
       id,
@@ -122,6 +137,7 @@ export const deleteWaterController = async (req, res) => {
       { new: true }
     );
   }
+
 
   return res.status(204).json();
 };
@@ -212,12 +228,9 @@ export const getWaterInfoTodayController = async (req, res) => {
       year,
       waterRateForThisDay: findDay.waterRateForThisDay,
       allAmountForDay: findDay.allAmountForDay,
-      perc: `${(
-        findDay.allAmountForDay /
-        (findDay.waterRateForThisDay / 100)
-      ).toFixed(2)}%`,
-      portionsOfWater,
-    });
+      percentageWater: `${(findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)).toFixed(2)}%`,
+      portionsOfWater
+    })
   }
 
   return res.json({

@@ -1,4 +1,4 @@
-export const emailLetter = (verificationCode, BASE_URL) => {
+export const emailVerify = (verificationCode, BASE_URL) => {
   return `
         <div style="max-width:400px;margin:20px auto; background-color:#eaf2ff;border-radius: 10px; padding: 20px; box-shadow: 0 4px 14px 0 rgba(64, 123, 255, 0.3);">
             <div style="text-align: center;">
@@ -36,4 +36,24 @@ export const emailLetter = (verificationCode, BASE_URL) => {
                     href="${BASE_URL}/api/auth/verify/${verificationCode}" target="_blank" rel="noreferrer">Log in now</a></div>
         </div>
     `;
+};
+
+export const emailTemporaryPassword = (temporaryPassword) => {
+  return `<div
+        style="max-width:400px;margin:20px auto; background-color:#eaf2ff;border-radius: 10px; padding: 20px; box-shadow: 0 4px 14px 0 rgba(64, 123, 255, 0.3);">
+        <div style="text-align: center;">
+            <img src="https://ci3.googleusercontent.com/meips/ADKq_NZtVnDbZ48UBIKicGG9fwjjUIHb4rZeNE86X35bFh2gWAx0fZ6egkvPq6oY7fN_RvmzLIQ-fLVtOx-uuD2u5jpEAnzIJeVS11RGsVP5Q-txMxqR8BgIDmyLVruKmu1jnQM96KC_cj76e2EqymgajY5r-wzIbtUnsAT9xXv8sdOYdnLlakc0Y7snsd4jx_WkLsuPDpsp02GzEuSA7LhFhx0_VROReXtxdQyIIuHlBN1SRaU=s0-d-e1-ft#https://res.cloudinary.com/doj55bihz/image/upload/c_pad,b_auto:predominant,fl_preserve_transparency/v1704651372/img/Logo-890d13ba_to7trg.jpg?_s=public-apps"
+                alt="">
+        </div>
+        <h2 style="text-align: center; color: #407bff;">Temporary password</h2>
+        <div
+            style="max-width:400px; text-align: center; background-color:#eaf2ff;border-radius:10px; padding: 10px; box-shadow: 0 4px 14px 0 rgba(64, 123, 255, 0.3); margin-bottom: 10px;">
+            <p>Hello,</p>
+            <p style="margin-bottom: 5px;">This is your temporary password.</p>
+             <Strong style="margin-bottom: 5px;">${temporaryPassword}</Strong>
+            <p>For security please change this password after login.</p>
+
+        </div>
+
+    </div>`;
 };

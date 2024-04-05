@@ -1,10 +1,16 @@
 import { User } from "../models/userModel.js";
 import gravatar from "gravatar";
 import bcryptjs from "bcryptjs";
-import { HttpError, sendEmail, emailLetter } from "../helpers/index.js";
+import {
+  HttpError,
+  sendEmail,
+  emailVerify,
+  emailTemporaryPassword,
+} from "../helpers/index.js";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
-import { randomUUID } from "crypto";
+import { randomBytes, randomUUID } from "crypto";
+import { promisify } from "util";
 
 const { JWT_SECRET, BASE_URL } = process.env;
 
@@ -32,7 +38,7 @@ export const registerController = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: emailLetter(verificationCode, BASE_URL),
+    html: emailVerify(verificationCode, BASE_URL),
   };
   await sendEmail(verifyEmail);
 
@@ -68,7 +74,7 @@ export const resendVerifyEmailController = async (req, res) => {
   const verifyEmail = {
     to: email,
     subject: "Verify email",
-    html: emailLetter(user.verificationCode, BASE_URL),
+    html: emailVerify(user.verificationCode, BASE_URL),
   };
   await sendEmail(verifyEmail);
   res.json({
@@ -104,7 +110,32 @@ export const loginController = async (req, res) => {
 };
 
 export const logoutController = async (req, res) => {
-    const { id } = req.user;
-    await User.findByIdAndUpdate(id, { token: null });
-    res.status(204).json()
-}
+  const { id } = req.user;
+  await User.findByIdAndUpdate(id, { token: null });
+  res.status(204).json();
+};
+
+export const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw HttpError(400, "Not valid email.");
+  }
+
+  const temporaryPassword = (await promisify(randomBytes)(8)).toString("hex");
+  const hashTemporaryPassword = await bcryptjs.hash(temporaryPassword, 10);
+
+  user.password = hashTemporaryPassword;
+  await user.save();
+
+  const verifyEmail = {
+    to: email,
+    subject: "Password recovery",
+    html: emailTemporaryPassword(temporaryPassword),
+  };
+  await sendEmail(verifyEmail);
+
+  res.status(200).json({
+    message: "Temporary password has been sent to your email.",
+  });
+};

@@ -45,7 +45,7 @@ waterRouter.delete(
   isValidId,
   ctrlWrapper(deleteWaterController)
 );
-waterRouter.get(
+waterRouter.post(
   "/per_month",
   authValidation,
   validateBody(waterMonthSchema),

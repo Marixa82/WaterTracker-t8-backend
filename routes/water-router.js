@@ -51,7 +51,7 @@ waterRouter.post(
   validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );
-waterRouter.get(
+waterRouter.post(
   "/today",
   authValidation,
   validateBody(waterTodaySchema),

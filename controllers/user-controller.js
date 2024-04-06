@@ -46,8 +46,8 @@ export const getUserInfo = async (req, res) => {
   }
 
   res.status(200).send({
-    avatarURL: user.avatarURL,
     email: user.email,
+    avatarURL: user.avatarURL,
     name: user.name,
     waterRate: user.waterRate,
     gender: user.gender,
@@ -59,28 +59,33 @@ export const updateInfo = async (req, res) => {
   const { id } = req.user;
   const { email, password, name, gender, outdatedPassword } = req.body;
 
-  if (!email && !name && !gender && !password)
+  if (!email && !name && !gender && !password && !outdatedPassword)
     throw HttpError(400, "Must be at least one field");
 
   const user = await User.findOne({ email });
   if (user) {
     throw HttpError(409, "Email in use");
   }
+  const { password: oldPass } = await User.findById(id);
 
-  if (outdatedPassword) {
-    if (!password) {
-      throw HttpError(400, "You forgot to enter your new password");
-    }
+  if (outdatedPassword && !password) {
+    throw HttpError(400, "You forgot to enter your new password");
   }
-
-  let hashPass;
-  if (password) {
-    if (!outdatedPassword) {
-      throw HttpError(400, "You need to enter your outdated password.");
-    }
+  else if (!outdatedPassword && password) {
+    throw HttpError(400, "You need to enter your outdated password.");
+  }
+  else if (outdatedPassword && password) {
     if (outdatedPassword === password) {
       throw HttpError(400, "You must enter new password.");
     }
+    const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
+  
+    if (!isCorrectPass) {
+      throw HttpError(400, "Old password is wrong");
+    }
+
+    let hashPass;
+    
     hashPass = await bcryptjs.hash(password, 10);
     req.body.password = hashPass;
   }
@@ -94,8 +99,17 @@ export const updateInfo = async (req, res) => {
     throw HttpError(404, "Not found");
   }
 
+
+
   res.status(200).json({
     message: "The user data change was successful.",
+    email: result.email,
+    avatarURL: result.avatarURL,
+    name: result.name,
+    waterRate: result.waterRate,
+    gender: result.gender,
+    verify: result.verify,
+    
   });
 };
 

@@ -16,7 +16,7 @@ import {
   waterUpdateSchema,
   waterMonthSchema,
   waterTodaySchema,
-} from "../models/userModel.js";
+} from "../models/waterModel.js";
 
 export const waterRouter = express.Router();
 

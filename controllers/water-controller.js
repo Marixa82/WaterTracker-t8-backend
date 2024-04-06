@@ -1,5 +1,6 @@
 import { HttpError } from "../helpers/index.js";
 import { User } from "../models/userModel.js";
+import { Water } from "../models/waterModel.js";
 
 const months = [
   "January",
@@ -19,22 +20,15 @@ const months = [
 export const waterRateController = async (req, res) => {
   const { waterRate, date } = req.body;
   const { id } = req.user;
-  const {watersForDay} = await User.findById(id);
 
   let sep
   if (date.includes('/')) sep = '/'
   else if (date.includes('-')) sep = '-'
   const [day, month, year] = date.split(sep);
 
+  await Water.updateMany({ owner: id, day, month: months[Number(month) - 1], year }, {waterRateForThisDay: waterRate});
   await User.findByIdAndUpdate(id, { waterRate }, { new: true });
   
-  const findDay = watersForDay.find(date => date.day === day && date.month === months[Number(month) - 1] && date.year === year);
-  if (findDay) {
-    findDay.waterRateForThisDay = waterRate
-    await User.findByIdAndUpdate(id, { $pull: { watersForDay: { _id: findDay._id } } }, { new: true });
-    await User.findByIdAndUpdate(id, { $push: { watersForDay: { ...findDay } } }, { new: true })
-  }
-
   res.status(200).json({
     message: "Water Rate was changed successful",
   });
@@ -43,7 +37,7 @@ export const waterRateController = async (req, res) => {
 export const addWaterController = async (req, res) => {
   const { id } = req.user;
   const { date, time, waterAmount } = req.body;
-  const { waterRate, watersForDay } = await User.findById(id);
+  const { waterRate } = await User.findById(id);
 
   let sep;
   if (date.includes("/")) sep = "/";
@@ -56,88 +50,34 @@ export const addWaterController = async (req, res) => {
     year,
     time,
     amount: waterAmount,
+    waterRateForThisDay: waterRate,
+    owner: id
   };
 
-  await User.findByIdAndUpdate(
-    id,
-    { $push: { waters: waterData } },
-    { new: true }
-  );
-  const findDay = watersForDay.find(
-    (water) =>
-      water.year === year &&
-      water.month === months[Number(month) - 1] &&
-      water.day === day
-  );
-  if (!findDay) {
-    const dataAboutDay = {
-      day,
-      month: months[Number(month) - 1],
-      year,
-      waterRateForThisDay: waterRate,
-      allAmountForDay: waterAmount,
-    };
-    await User.findByIdAndUpdate(
-      id,
-      { $push: { watersForDay: dataAboutDay } },
-      { new: true }
-    );
-  } else {
-    findDay.allAmountForDay = findDay.allAmountForDay + waterAmount;
-
-
-    await User.findByIdAndUpdate(
-      id,
-      { $pull: { watersForDay: { _id: findDay._id } } },
-      { new: true }
-    );
-    await User.findByIdAndUpdate(
-      id,
-      { $push: { watersForDay: { ...findDay } } },
-      { new: true }
-    );
-  }
-
+  const waterPortion = (await Water.create(waterData));
+  
   return res.json({
     message: "New water portion is added successful",
-    waterData,
+    waterData: {
+      "day": waterPortion.day,
+      "month": waterPortion.month,
+      "year": waterPortion.year,
+      "time": waterPortion.time,
+      "amount": waterPortion.amount,
+      "id": waterPortion._id
+    }
+  
   });
 };
 
 export const deleteWaterController = async (req, res) => {
   const { id } = req.user;
   const { id: waterId } = req.params;
-  const { waters, watersForDay } = await User.findById(id);
-  const waterPortion = waters.find((water) => water._id.toString() === waterId);
+
+  const waterPortion = await Water.findOneAndDelete({ _id: waterId, owner: id });
+
   if (!waterPortion)
     throw HttpError(404, `There are no portions with id ${waterId}`);
-
-  await User.findByIdAndUpdate(
-    id,
-    { $pull: { waters: { _id: waterId } } },
-    { new: true }
-  );
-  const findDay = watersForDay.find(
-    (water) =>
-      water.year === waterPortion.year &&
-      water.month === waterPortion.month &&
-      water.day === waterPortion.day
-  );
-  if (findDay) {
-    findDay.allAmountForDay = findDay.allAmountForDay - waterPortion.amount;
-
-    await User.findByIdAndUpdate(
-      id,
-      { $pull: { watersForDay: { _id: findDay._id } } },
-      { new: true }
-    );
-    await User.findByIdAndUpdate(
-      id,
-      { $push: { watersForDay: { ...findDay } } },
-      { new: true }
-    );
-  }
-
 
   return res.status(204).json();
 };
@@ -146,52 +86,24 @@ export const updateWaterController = async (req, res) => {
   const { id } = req.user;
   const { id: waterId } = req.params;
   const { time, waterAmount } = req.body;
-  const { waters, watersForDay } = await User.findById(id);
-  const waterPortion = waters.find((water) => water._id.toString() === waterId);
 
-  if (!waterPortion)
-    throw HttpError(404, `There are no portions with id ${waterId}`);
+  const waterPortion = await Water.findOne({ _id: waterId, owner: id });
+  if (!waterPortion) throw HttpError(404, `There are no portions with id ${waterId}`);
 
   if (!time && !waterAmount) throw HttpError(400, "Must be at least one field");
-  if (time) waterPortion.time = time;
-  if (waterAmount) {
-    const findDay = watersForDay.find(
-      (water) =>
-        water.year === waterPortion.year &&
-        water.month === waterPortion.month &&
-        water.day === waterPortion.day
-    );
-    if (findDay) {
-      findDay.allAmountForDay =
-        findDay.allAmountForDay + waterAmount - waterPortion.amount;
-      await User.findByIdAndUpdate(
-        id,
-        { $pull: { watersForDay: { _id: findDay._id } } },
-        { new: true }
-      );
-      await User.findByIdAndUpdate(
-        id,
-        { $push: { watersForDay: { ...findDay } } },
-        { new: true }
-      );
-    }
-    waterPortion.amount = waterAmount;
-  }
 
-  await User.findByIdAndUpdate(
-    id,
-    { $pull: { waters: { _id: waterId } } },
-    { new: true }
-  );
-  await User.findByIdAndUpdate(
-    id,
-    { $push: { waters: { ...waterPortion } } },
-    { new: true }
-  );
+ const newPortion = await Water.findByIdAndUpdate(waterId, { time: time ?? waterPortion.time, amount: waterAmount ?? waterPortion.amount }, {new: true});
 
   return res.json({
     message: "Water portion is updated successful",
-    waterPortion,
+    waterData: {
+      "day": newPortion.day,
+      "month": newPortion.month,
+      "year": newPortion.year,
+      "time": newPortion.time,
+      "amount": newPortion.amount,
+      "id": newPortion._id
+    }
   });
 };
 
@@ -202,43 +114,31 @@ export const getWaterInfoTodayController = async (req, res) => {
   if (date.includes("/")) sep = "/";
   else if (date.includes("-")) sep = "-";
   const [day, month, year] = date.split(sep);
-  const { waters, watersForDay } = await User.findById(id);
-  const portionsOfWater = waters
-    .filter(
-      (water) =>
-        water.day === day &&
-        water.month === months[Number(month) - 1] &&
-        water.year === year
-    )
-    .map((water) => ({
-      time: water.time,
-      amount: water.amount,
-      id: water._id,
-    }));
-  const findDay = watersForDay.find(
-    (water) =>
-      water.year === year &&
-      water.month === months[Number(month) - 1] &&
-      water.day === day
-  );
-  if (portionsOfWater.length !== 0 && findDay) {
+
+  const allWater = await Water.find({ owner: id, day, month: months[Number(month) - 1], year });
+  
+  if (allWater.length === 0) {
     return res.json({
       day,
       month: months[Number(month) - 1],
       year,
-      waterRateForThisDay: findDay.waterRateForThisDay,
-      allAmountForDay: findDay.allAmountForDay,
-      percentageWater: `${(findDay.allAmountForDay / (findDay.waterRateForThisDay / 100)).toFixed(2)}%`,
-      portionsOfWater
-    })
+      portionsOfWater: allWater,
+    });
+    
   }
 
+  const filteredWaters = allWater.map(water => ({ time: water.time, amount: water.amount, id: water._id }))
+  const allAmountForDay = filteredWaters.reduce((acc, water)=> acc += water.amount, 0)
+  
   return res.json({
-    day,
-    month: months[Number(month) - 1],
-    year,
-    portionsOfWater,
-  });
+      day,
+      month: months[Number(month) - 1],
+      year,
+      waterRateForThisDay: allWater[0].waterRateForThisDay,
+      allAmountForDay,
+      percentageWater: `${(allAmountForDay / (allWater[0].waterRateForThisDay / 100)).toFixed(2)}%`,
+      portionsOfWater: filteredWaters
+    })
 };
 
 export const getWaterInfoPerMonthController = async (req, res) => {
@@ -250,49 +150,65 @@ export const getWaterInfoPerMonthController = async (req, res) => {
   const [month, year] = date.split(sep);
   const mo = months[Number(month) - 1];
 
-  const { watersForDay, waters } = await User.findById(id);
+  const allWater = await Water.find({ owner: id, month: months[Number(month) - 1], year });
 
-  let waterForMonth = [];
+  if (allWater.length === 0) {
+    return res.status(200).json({
+      month: mo,
+      year,
+      waterForMonth: allWater
+    });
+  }
+  // let waterForMonth = [];
+  // while (allWater.length > 0) {
+  //   const firstDay = allWater[0].day
+  //   const dataForOneDay = allWater.filter(water => water.day === firstDay);
+  //   // const dataAboutOneDay = {
+  //   //   "date": ,
+  //   //   "year" ,
+  //   //   "totalWaterForDay" ,
+  
+  //   // }
+  //   allWater.filter(water => water.day !== firstDay)
+  // }
+  // console.log(dataForOneDay)
+  
 
-  watersForDay.forEach((forDay) => {
-    if (forDay.month === mo) {
-      const numberOfZeros = forDay.waterRateForThisDay
-        .toString()
-        .split("")
-        .filter((char) => char === "0").length;
+  // watersForDay.forEach((forDay) => {
+  //   if (forDay.month === mo) {
+  //     const numberOfZeros = forDay.waterRateForThisDay
+  //       .toString()
+  //       .split("")
+  //       .filter((char) => char === "0").length;
 
-      waters.filter((el) => {
-        console.log(el.day);
-      });
+  //     waters.filter((el) => {
+  //       console.log(el.day);
+  //     });
 
-      const infoPerMonth = {
-        totalWaterForDay: waters.filter(
-          (portion) =>
-            mo === portion.month &&
-            year === portion.year &&
-            forDay.day === portion.day
-        ).length,
-        date: `${forDay.day[0] === "0" ? forDay.day.slice(1) : forDay.day}, ${
-          forDay.month
-        }`,
-        dailyNorm:
-          numberOfZeros > 1
-            ? (Number(forDay.waterRateForThisDay) / 1000).toFixed(1) + " L"
-            : (Number(forDay.waterRateForThisDay) / 1000).toFixed(2) + " L",
-        percentageWater:
-          (
-            (Number(forDay.allAmountForDay) /
-              Number(forDay.waterRateForThisDay)) *
-            100
-          ).toFixed(2) + " %",
-      };
-      waterForMonth.push(infoPerMonth);
-    }
-  });
+  //     const infoPerMonth = {
+  //       totalWaterForDay: waters.filter(
+  //         (portion) =>
+  //           mo === portion.month &&
+  //           year === portion.year &&
+  //           forDay.day === portion.day
+  //       ).length,
+  //       date: `${forDay.day[0] === "0" ? forDay.day.slice(1) : forDay.day}, ${
+  //         forDay.month
+  //       }`,
+  //       dailyNorm:
+  //         numberOfZeros > 1
+  //           ? (Number(forDay.waterRateForThisDay) / 1000).toFixed(1) + " L"
+  //           : (Number(forDay.waterRateForThisDay) / 1000).toFixed(2) + " L",
+  //       percentageWater:
+  //         (
+  //           (Number(forDay.allAmountForDay) /
+  //             Number(forDay.waterRateForThisDay)) *
+  //           100
+  //         ).toFixed(2) + " %",
+  //     };
+  //     waterForMonth.push(infoPerMonth);
+  //   }
+  // });
 
-  return res.status(200).json({
-    month: mo,
-    year,
-    waterForMonth,
-  });
+  
 };

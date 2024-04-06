@@ -25,6 +25,14 @@ const userSchema = new Schema(
     avatarURL: {
       type: String,
     },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationCode: {
+      type: String,
+      default: "",
+    },
     waterRate: {
       type: Number,
       default: 2000,
@@ -103,7 +111,14 @@ export const registerSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
   password: Joi.string().min(8).max(64).required(),
 });
+
 export const waterRateSchema = Joi.object({
+  date: Joi.string()
+    .regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
+    }),
   waterRate: Joi.number().required().integer().min(100).max(15000),
 });
 
@@ -138,14 +153,18 @@ export const updateUserInfoSchema = Joi.object({
     tlds: { allow: ["com", "net"] },
   }),
   password: Joi.string().min(8).max(64),
+  outdatedPassword: Joi.string().min(8).max(64),
   name: Joi.string(),
-  gender: Joi.string().valid("male", "female")
+  gender: Joi.string().valid("male", "female"),
 });
 
 export const waterTodaySchema = Joi.object({
-    date: Joi.string().regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/).required().messages({
-        "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
-    })
+  date: Joi.string()
+    .regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)
+    .required()
+    .messages({
+      "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
+    }),
 });
 
 export const waterMonthSchema = Joi.object({
@@ -155,4 +174,10 @@ export const waterMonthSchema = Joi.object({
     .messages({
       "string.pattern.base": "date must be in format MM/YYYY or MM-YYYY",
     }),
+});
+
+export const emailSchema = Joi.object({
+  email: Joi.string()
+    .required()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
 });

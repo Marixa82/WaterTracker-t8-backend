@@ -26,7 +26,7 @@ waterRouter.patch(
   validateBody(waterRateSchema),
   ctrlWrapper(waterRateController)
 );
-waterRouter.put(
+waterRouter.post(
   "/",
   authValidation,
   validateBody(waterAddedSchema),
@@ -51,4 +51,9 @@ waterRouter.get(
   validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );
-waterRouter.get('/today', authValidation, validateBody(waterTodaySchema), ctrlWrapper(getWaterInfoTodayController));
+waterRouter.get(
+  "/today",
+  authValidation,
+  validateBody(waterTodaySchema),
+  ctrlWrapper(getWaterInfoTodayController)
+);

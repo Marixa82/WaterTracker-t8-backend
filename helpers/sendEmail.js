@@ -1,11 +1,13 @@
 import "dotenv/config";
-import { send, setApiKey } from "@sendgrid/mail";
+import sgMail from "@sendgrid/mail";
 
 const { SENDGRID_API_KEY } = process.env;
-setApiKey(SENDGRID_API_KEY);
+sgMail.setApiKey(SENDGRID_API_KEY);
 
-export const sendEmail = async (data) => {
+const sendEmail = async (data) => {
   const email = { ...data, from: "vysotskymaxim124@gmail.com" };
-  await send(email);
+  await sgMail.send(email);
   return true;
 };
+
+export default sendEmail;

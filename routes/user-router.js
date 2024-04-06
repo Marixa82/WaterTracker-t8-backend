@@ -1,12 +1,13 @@
 import express from "express";
-import { authValidation, upload, isValidId } from "../middlewares/index.js";
+import { authValidation, upload } from "../middlewares/index.js";
 import {
   updateAvatar,
   getUserInfo,
   updateInfo,
+  deleteController,
 } from "../controllers/user-controller.js";
 import { ctrlWrapper, validateBody } from "../helpers/index.js";
-import { updateUserInfoSchema } from "../models/userModel.js";
+import { registerSchema, updateUserInfoSchema } from "../models/userModel.js";
 
 export const userRouter = express.Router();
 
@@ -25,3 +26,4 @@ userRouter.put(
   validateBody(updateUserInfoSchema),
   ctrlWrapper(updateInfo)
 );
+userRouter.delete('/', authValidation, validateBody(registerSchema), ctrlWrapper(deleteController))

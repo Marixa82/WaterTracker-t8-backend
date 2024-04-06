@@ -57,9 +57,9 @@ export const getUserInfo = async (req, res) => {
 
 export const updateInfo = async (req, res) => {
   const { id } = req.user;
-  const { email, password, name, gender, outdatedPassword } = req.body;
+  const { email, newPassword, name, gender, outdatedPassword } = req.body;
 
-  if (!email && !name && !gender && !password && !outdatedPassword)
+  if (!email && !name && !gender && !newPassword && !outdatedPassword)
     throw HttpError(400, "Must be at least one field");
 
   const user = await User.findOne({ email });
@@ -68,14 +68,14 @@ export const updateInfo = async (req, res) => {
   }
   const { password: oldPass } = await User.findById(id);
 
-  if (outdatedPassword && !password) {
+  if (outdatedPassword && !newPassword) {
     throw HttpError(400, "You forgot to enter your new password");
   }
-  else if (!outdatedPassword && password) {
+  else if (!outdatedPassword && newPassword) {
     throw HttpError(400, "You need to enter your outdated password.");
   }
-  else if (outdatedPassword && password) {
-    if (outdatedPassword === password) {
+  else if (outdatedPassword && newPassword) {
+    if (outdatedPassword === newPassword) {
       throw HttpError(400, "You must enter new password.");
     }
     const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
@@ -86,7 +86,7 @@ export const updateInfo = async (req, res) => {
 
     let hashPass;
     
-    hashPass = await bcryptjs.hash(password, 10);
+    hashPass = await bcryptjs.hash(newPassword, 10);
     req.body.password = hashPass;
   }
 

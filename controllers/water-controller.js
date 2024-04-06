@@ -150,7 +150,7 @@ export const getWaterInfoPerMonthController = async (req, res) => {
   const [month, year] = date.split(sep);
   const mo = months[Number(month) - 1];
 
-  const allWater = await Water.find({ owner: id, month: months[Number(month) - 1], year });
+  const allWater = await Water.find({ owner: id, month: mo, year });
 
   if (allWater.length === 0) {
     return res.status(200).json({
@@ -159,56 +159,26 @@ export const getWaterInfoPerMonthController = async (req, res) => {
       waterForMonth: allWater
     });
   }
-  // let waterForMonth = [];
-  // while (allWater.length > 0) {
-  //   const firstDay = allWater[0].day
-  //   const dataForOneDay = allWater.filter(water => water.day === firstDay);
-  //   // const dataAboutOneDay = {
-  //   //   "date": ,
-  //   //   "year" ,
-  //   //   "totalWaterForDay" ,
+  let waterForMonth = [];
+  allWater.forEach(water => {
+    if (waterForMonth.some(waterForMonthData => waterForMonthData.date === `${water.day[0] === "0" ? water.day.slice(1) : water.day}, ${water.month}`)) return;
+    const dataForOneDay = allWater.filter(data => data.day === water.day);
+    const allAmountForDay = dataForOneDay.reduce((acc, dataWater) => acc += dataWater.amount, 0)
+    const dataAboutOneDay = {
+      "date": `${water.day[0] === "0" ? water.day.slice(1) : water.day}, ${water.month}`,
+      "year": water.year,
+      "totalWaterPortionsForDay": dataForOneDay.length,
+      "dailyNorm": `${(water.waterRateForThisDay / 1000).toFixed(2)} L`,
+      "percentageWater": `${(allAmountForDay / (water.waterRateForThisDay / 100)).toFixed(2)}%`,
   
-  //   // }
-  //   allWater.filter(water => water.day !== firstDay)
-  // }
-  // console.log(dataForOneDay)
-  
+    }
+    waterForMonth.push(dataAboutOneDay);
+  });
 
-  // watersForDay.forEach((forDay) => {
-  //   if (forDay.month === mo) {
-  //     const numberOfZeros = forDay.waterRateForThisDay
-  //       .toString()
-  //       .split("")
-  //       .filter((char) => char === "0").length;
+  return res.status(200).json({
+      month: mo,
+      year,
+      waterForMonth
+    });
 
-  //     waters.filter((el) => {
-  //       console.log(el.day);
-  //     });
-
-  //     const infoPerMonth = {
-  //       totalWaterForDay: waters.filter(
-  //         (portion) =>
-  //           mo === portion.month &&
-  //           year === portion.year &&
-  //           forDay.day === portion.day
-  //       ).length,
-  //       date: `${forDay.day[0] === "0" ? forDay.day.slice(1) : forDay.day}, ${
-  //         forDay.month
-  //       }`,
-  //       dailyNorm:
-  //         numberOfZeros > 1
-  //           ? (Number(forDay.waterRateForThisDay) / 1000).toFixed(1) + " L"
-  //           : (Number(forDay.waterRateForThisDay) / 1000).toFixed(2) + " L",
-  //       percentageWater:
-  //         (
-  //           (Number(forDay.allAmountForDay) /
-  //             Number(forDay.waterRateForThisDay)) *
-  //           100
-  //         ).toFixed(2) + " %",
-  //     };
-  //     waterForMonth.push(infoPerMonth);
-  //   }
-  // });
-
-  
 };

@@ -45,13 +45,13 @@ waterRouter.delete(
   isValidId,
   ctrlWrapper(deleteWaterController)
 );
-waterRouter.get(
+waterRouter.post(
   "/per_month",
   authValidation,
   validateBody(waterMonthSchema),
   ctrlWrapper(getWaterInfoPerMonthController)
 );
-waterRouter.get(
+waterRouter.post(
   "/today",
   authValidation,
   validateBody(waterTodaySchema),

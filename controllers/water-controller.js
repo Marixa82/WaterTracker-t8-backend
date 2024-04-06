@@ -109,7 +109,9 @@ export const updateWaterController = async (req, res) => {
 
 export const getWaterInfoTodayController = async (req, res) => {
   const { id } = req.user;
-  const { date } = req.body;
+  const { date } = req.query;
+  if(!date) throw HttpError(400, "date is required in query params")
+  if(!date.match(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)) throw HttpError(400, "date must be in format DD/MM/YYYY or DD-MM-YYYY")
   let sep;
   if (date.includes("/")) sep = "/";
   else if (date.includes("-")) sep = "-";
@@ -143,7 +145,9 @@ export const getWaterInfoTodayController = async (req, res) => {
 
 export const getWaterInfoPerMonthController = async (req, res) => {
   const { id } = req.user;
-  const { date } = req.body;
+  const { date } = req.query;
+  if(!date) throw HttpError(400, "date is required in query params")
+  if(!date.match(/^(0?[1-9]|1[012])[\/\-]\d{4}$/)) throw HttpError(400, "date must be in format MM/YYYY or MM-YYYY")
   let sep;
   if (date.includes("/")) sep = "/";
   else if (date.includes("-")) sep = "-";

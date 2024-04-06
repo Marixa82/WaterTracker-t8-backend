@@ -102,12 +102,6 @@ export const updateInfo = async (req, res) => {
 
 export const deleteController = async (req, res) => {
   const { id } = req.user;
-  const { password } = req.body;
-
-  const isCorrectPass = await bcryptjs.compare(password, user.password);
-  if (!isCorrectPass) {
-    throw HttpError(401, "Password is wrong");
-  }
 
   await User.findByIdAndDelete(id);
   await Water.deleteMany({ owner: id });

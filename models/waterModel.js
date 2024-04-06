@@ -64,21 +64,3 @@ export const waterUpdateSchema = Joi.object({
     }),
   waterAmount: Joi.number().integer().min(1).max(5000),
 });
-
-export const waterTodaySchema = Joi.object({
-  date: Joi.string()
-    .regex(/^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/)
-    .required()
-    .messages({
-      "string.pattern.base": "date must be in format DD/MM/YYYY or DD-MM-YYYY",
-    }),
-});
-
-export const waterMonthSchema = Joi.object({
-  date: Joi.string()
-    .regex(/^(0?[1-9]|1[012])[\/\-]\d{4}$/)
-    .required()
-    .messages({
-      "string.pattern.base": "date must be in format MM/YYYY or MM-YYYY",
-    }),
-});

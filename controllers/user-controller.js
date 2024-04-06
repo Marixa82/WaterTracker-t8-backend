@@ -102,7 +102,6 @@ export const updateInfo = async (req, res) => {
 
 
   res.status(200).json({
-    message: "The user data change was successful.",
     email: result.email,
     avatarURL: result.avatarURL,
     name: result.name,

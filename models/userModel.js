@@ -61,7 +61,7 @@ export const updateUserInfoSchema = Joi.object({
     minDomainSegments: 2,
     tlds: { allow: ["com", "net"] },
   }),
-  password: Joi.string().min(8).max(64),
+  newPassword: Joi.string().min(8).max(64),
   outdatedPassword: Joi.string().min(8).max(64),
   name: Joi.string(),
   gender: Joi.string().valid("male", "female"),

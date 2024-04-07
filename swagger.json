@@ -161,6 +161,112 @@
         ]
       }
     },
+    "/api/auth/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "requestBody": {
+          "description": "Verification user email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Verify email send success"
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/verify/{verificationCode}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "parameters": [
+          {
+            "name": "verificationCode",
+            "in": "path",
+            "description": "verificationCode user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verify success"
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "Custom email format (email)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Temporary password has been sent to your email"
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
   "/api/user/avatars": {
       "patch": {
         "tags": [
@@ -199,12 +305,12 @@
               }
             }
           },
-          "409": {
-            "description": "Conflict",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorConflictResponse"
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
                 }
               }
             }
@@ -235,12 +341,12 @@
               }
             }
           },
-          "404": {
-            "description": "Not found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
                 }
               }
             }
@@ -279,12 +385,22 @@
               }
             }
           },
-          "404": {
-            "description": "Not found",
+          "400": {
+            "description": "Bad Request",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
                 }
               }
             }
@@ -380,6 +496,20 @@
             "type": "string",
             "description": "User's token",
             "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxNDYxNGM1MGRiMTNjNjk1N2MxMiIsImlhdCI6MTcxMjA2NzcyMiwiZXhwIjoxNzEyMTUwNTIyfQ.dftMsB6Sz2bzb5HEYmGWRgM9G3tAdTXVH0rYrxW4b6U"
+          }
+        }
+      },
+      "VerificationRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           }
         }
       },
@@ -537,6 +667,13 @@
             "description": "Server error"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
     }

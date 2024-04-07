@@ -3,6 +3,7 @@ import { User } from "../models/userModel.js";
 import { v2 as cloudinary } from "cloudinary";
 import bcryptjs from "bcryptjs";
 import { HttpError } from "../helpers/index.js";
+import { Water } from "../models/waterModel.js";
 
 export const updateAvatar = async (req, res) => {
   const { _id } = req.user;
@@ -114,17 +115,9 @@ export const updateInfo = async (req, res) => {
 
 export const deleteController = async (req, res) => {
   const { id } = req.user;
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw HttpError(401, "Email or password is wrong");
-  }
-  const isCorrectPass = await bcryptjs.compare(password, user.password);
-  if (!isCorrectPass) {
-    throw HttpError(401, "Email or password is wrong");
-  }
 
   await User.findByIdAndDelete(id);
+  await Water.deleteMany({ owner: id });
 
   res.status(204).json();
 };

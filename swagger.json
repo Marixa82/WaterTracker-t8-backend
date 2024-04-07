@@ -160,6 +160,161 @@
           }
         ]
       }
+    },
+  "/api/user/avatars": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's avatar",
+        "requestBody": {
+          "description": "Add  user avatar",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAvatarRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is add success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's info",
+        "description": "Get user info",
+        "responses": {
+          "200": {
+            "description": "All information about user",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's update info",
+        "requestBody": {
+          "description": "User's new info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The user data change was successful",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/user": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User delete",
+        "description": "Delete user account",
+        "responses": {
+          "204": {
+            "description": "User account delete successfully"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
     }},
   "components": {
     "schemas": {
@@ -228,7 +383,96 @@
           }
         }
       },
-      
+      "UserAvatarRequest": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "UserAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://res.cloudinary.com/dwlu2h8dv/image/upload/v1712338141/avatars/660dc04170132ea38d6dc147_IMG_3308.JPG.jpg"
+          }
+        }
+      },
+      "UserInfoResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "Unique avatar of the user",
+            "example": "https://res.cloudinary.com/dwlu2h8dv/image/upload/v1712338141/avatars/660dc04170132ea38d6dc147_IMG_3308.JPG.jpg"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email"
+          },
+          "name": {
+            "type": "string",
+            "example": "UserName",
+            "default": "email"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true,
+            "example": "female",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "waterRate": {
+            "maximum": 15000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "verify": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserUpdateInfoRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's display name"
+          },
+          "email": {
+            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "outdatedPassword": {
+            "maxLength": 64,
+            "minLength": 8,
+            "type": "string",
+            "description": "User's old password"
+          },
+          "newPassword": {
+            "maxLength": 64,
+            "minLength": 8,
+            "type": "string",
+            "description": "User's password"
+          },
+          "gender": {
+            "type": "string",
+            "description": "User's gender",
+            "enum": [
+              "male",
+              "female"
+            ]
+          }
+        }
+      },
       "errorBadRequestResponse": {
         "type": "object",
         "properties": {

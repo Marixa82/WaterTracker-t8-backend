@@ -157,6 +157,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -317,6 +320,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -353,6 +359,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       },
@@ -407,6 +416,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -426,6 +438,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -465,6 +480,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -520,6 +538,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -588,6 +609,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       },
@@ -647,6 +671,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -707,6 +734,9 @@
         "security": [
           {
             "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
           }
         ]
       }
@@ -762,7 +792,15 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
       }
     }
   }, 
@@ -1245,9 +1283,21 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+      },
+      "GoogleAuth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://watertracker-t8-backend.onrender.com/api/auth/google",
+            "scopes": {
+              "profile": "user profile",
+              "email": "user email"
+            }
+          }
+        }
       }
     }
-    }
   }
+}
     
   

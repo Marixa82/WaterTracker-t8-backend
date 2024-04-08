@@ -5,6 +5,8 @@ import "dotenv/config";
 import { authRouter } from "./routes/auth-router.js";
 import { waterRouter } from "./routes/water-router.js";
 import { userRouter } from "./routes/user-router.js";
+import { deleteUnverifiedUsers } from "./helpers/index.js";
+setInterval(deleteUnverifiedUsers, 24 * 60 * 60 * 1000);
 const app = express();
 
 app.use(morgan("tiny"));

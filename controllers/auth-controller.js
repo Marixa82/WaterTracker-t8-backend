@@ -65,9 +65,10 @@ export const verifyEmailController = async (req, res) => {
     verify: true,
     verificationCode: "",
   });
-  res.json({
-    message: "Email verify success",
-  });
+  // res.json({
+  //   message: "Email verify success",
+  // });
+  res.status(200).redirect("https://stee1lemon.github.io/water-tracker/signin");
 };
 
 export const resendVerifyEmailController = async (req, res) => {

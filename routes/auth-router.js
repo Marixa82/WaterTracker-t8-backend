@@ -7,6 +7,8 @@ import {
   verifyEmailController,
   resendVerifyEmailController,
   forgotPasswordController,
+  googleAuth,
+  googleRedirect,
 } from "../controllers/auth-controller.js";
 import { registerSchema, emailSchema } from "../models/userModel.js";
 import { authValidation } from "../middlewares/index.js";
@@ -35,3 +37,5 @@ authRouter.post(
   validateBody(emailSchema),
   ctrlWrapper(forgotPasswordController)
 );
+authRouter.get("/google", ctrlWrapper(googleAuth));
+authRouter.get("/google-redirect", ctrlWrapper(googleRedirect));

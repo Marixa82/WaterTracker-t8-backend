@@ -11,8 +11,16 @@ import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { randomBytes, randomUUID } from "crypto";
 import { promisify } from "util";
+import axios from "axios";
+import queryString from "query-string";
 
-const { JWT_SECRET, BASE_URL } = process.env;
+const {
+  JWT_SECRET,
+  BASE_URL,
+  GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET,
+  FRONTEND_URL,
+} = process.env;
 
 export const registerController = async (req, res) => {
   const { password, email } = req.body;
@@ -90,10 +98,6 @@ export const loginController = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  // if (!user.verify) {
-  //   throw HttpError(401, "Email not verified");
-  // }
-
   const isCorrectPass = await bcryptjs.compare(password, user.password);
 
   if (!isCorrectPass) {
@@ -138,4 +142,78 @@ export const forgotPasswordController = async (req, res) => {
   res.status(200).json({
     message: "Temporary password has been sent to your email.",
   });
+};
+
+export const googleAuth = async (req, res) => {
+  const stringifyParams = queryString.stringify({
+    client_id: GOOGLE_CLIENT_ID,
+    redirect_uri: `${BASE_URL}/api/auth/google-redirect`,
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ].join(" "),
+    response_type: "code",
+    access_type: "offline",
+    prompt: "consent",
+  });
+
+  return res.redirect(
+    `https://accounts.google.com/o/oauth2/v2/auth?${stringifyParams}`
+  );
+};
+
+export const googleRedirect = async (req, res) => {
+  const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
+  const urlObj = new URL(fullUrl);
+  const urlParams = queryString.parse(urlObj.search);
+  const code = urlParams.code;
+
+  const tokenData = await axios({
+    url: `https://oauth2.googleapis.com/token`,
+    method: "post",
+    data: {
+      client_id: GOOGLE_CLIENT_ID,
+      client_secret: GOOGLE_CLIENT_SECRET,
+      redirect_uri: `${BASE_URL}/api/auth/google-redirect`,
+      grant_type: "authorization_code",
+      code,
+    },
+  });
+  const userData = await axios({
+    url: "https://www.googleapis.com/oauth2/v2/userinfo",
+    method: "get",
+    headers: {
+      Authorization: `Bearer ${tokenData.data.access_token}`,
+    },
+  });
+
+  const { email, id, picture, name, verified_email } = userData.data;
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    const hashTemporaryPassword = await bcryptjs.hash(id, 10);
+    const newUser = await User.create({
+      email,
+      password: hashTemporaryPassword,
+      avatarURL: picture,
+      name,
+      verify: verified_email,
+    });
+
+    const payload = { id: newUser.id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
+    newUser.token = token;
+    await newUser.save();
+
+    return res.redirect(`${FRONTEND_URL}/signin/?token=${token}`);
+  } else {
+    const payload = { id: user.id };
+    const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+
+    user.token = token;
+    await user.save();
+
+    return res.redirect(`${FRONTEND_URL}/?token=${token}`);
+  }
 };

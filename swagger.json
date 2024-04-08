@@ -432,14 +432,14 @@
         ]
       }
     },
-      "/api/waters/water_rate": {
+    "/api/waters/water_rate": {
       "patch": {
         "tags": [
           "Waters"
         ],
         "summary": "Update user's water_rate",
         "requestBody": {
-          "description": "Update wate_rate of user",
+          "description": "Update water_rate of user",
           "content": {
             "application/json": {
               "schema": {
@@ -578,6 +578,184 @@
           },
           "401": {
             "description": "Unautorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "Delete water point user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "water point Id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Water point is delete success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unautorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are not portions with id <id>",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/waters/per_month": {
+      "get": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User water per month volume",
+        "description": "Info about user water volume per month",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Custom date format (MM-YYYY)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "03-2023"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User point per_month",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterInfoPerMonthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          }
+        ]
+      }
+    },
+    "/api/waters/today": {
+      "get": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User water volume today",
+        "description": "Info about user water volume today",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Custom date format (DD-MM-YYYY)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User point today",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterInfoTodayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
             "content": {
               "application/json": {
                 "schema": {

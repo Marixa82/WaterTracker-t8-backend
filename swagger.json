@@ -232,24 +232,22 @@
       }
     },
     "/api/auth/forgot-password": {
-      "get": {
+      "post": {
         "tags": [
           "Auth"
         ],
         "summary": "User verification",
-        "parameters": [
-          {
-            "name": "email",
-            "in": "query",
-            "description": "Custom email format (email)",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
+        "requestBody": {
+          "description": "Verification user email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
             }
-          }
-        ],
+          },
+          "required": true
+        },
         "responses": {
           "200": {
             "description": "Temporary password has been sent to your email"

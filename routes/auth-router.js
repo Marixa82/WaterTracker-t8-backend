@@ -32,7 +32,7 @@ authRouter.post(
   ctrlWrapper(loginController)
 );
 authRouter.post("/logout", authValidation, ctrlWrapper(logoutController));
-authRouter.get(
+authRouter.post(
   "/forgot-password",
   validateBody(emailSchema),
   ctrlWrapper(forgotPasswordController)

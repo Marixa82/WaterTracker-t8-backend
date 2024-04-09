@@ -42,10 +42,6 @@ export const getUserInfo = async (req, res) => {
     "avatarURL email name waterRate gender verify"
   );
 
-  if (!user) {
-    throw HttpError(404, "Not found");
-  }
-
   res.status(200).send({
     email: user.email,
     avatarURL: user.avatarURL,
@@ -64,43 +60,30 @@ export const updateInfo = async (req, res) => {
     throw HttpError(400, "Must be at least one field");
 
   const user = await User.findOne({ email });
-  if (user) {
+  if (user && user.id !== id) {
     throw HttpError(409, "Email in use");
   }
-  const { password: oldPass } = await User.findById(id);
+  const updatedUser = await User.findById(id);
+  let hashPass;
 
-  if (outdatedPassword && !newPassword) {
-    throw HttpError(400, "You forgot to enter your new password");
+  if (newPassword && outdatedPassword) {
+    const isCorrectPass = await bcryptjs.compare(outdatedPassword, updatedUser.password);
+    
+      if (!isCorrectPass) {
+        throw HttpError(400, "Old password is wrong");
+      }
+      
+      hashPass = await bcryptjs.hash(newPassword, 10);
   }
-  else if (!outdatedPassword && newPassword) {
-    throw HttpError(400, "You need to enter your outdated password.");
-  }
-  else if (outdatedPassword && newPassword) {
-    if (outdatedPassword === newPassword) {
-      throw HttpError(400, "You must enter new password.");
-    }
-    const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
-
-    if (!isCorrectPass) {
-      throw HttpError(400, "Old password is wrong");
-    }
-
-    let hashPass;
-
-    hashPass = await bcryptjs.hash(newPassword, 10);
-    req.body.password = hashPass;
-  }
-
-  const result =
-    (await User.findByIdAndUpdate(id, req.body, {
+  
+  const result = await User.findByIdAndUpdate(id, {
+    "email": email ?? updatedUser.email,
+    "name": name ?? updatedUser.name,
+    "gender": gender ?? updatedUser.gender,
+    "password": hashPass ?? updatedUser.password
+  }, {
       new: true,
-    })) || null;
-
-  if (result === null) {
-    throw HttpError(404, "Not found");
-  }
-
-
+    });
 
   res.status(200).json({
     email: result.email,

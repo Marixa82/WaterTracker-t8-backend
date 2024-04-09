@@ -17,7 +17,7 @@ export const updateAvatar = async (req, res) => {
     throw new Error("Формат зображення не підтримується.");
   }
 
-  image.resize(48, 48);
+  image.resize(80, 80);
   await image.writeAsync(tempUpload);
 
   const filename = `${_id}_${originalname}`;

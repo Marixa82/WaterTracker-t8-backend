@@ -62,7 +62,11 @@ export const updateUserInfoSchema = Joi.object({
     tlds: { allow: ["com", "net"] },
   }),
   newPassword: Joi.string().min(8).max(64),
-  outdatedPassword: Joi.string().min(8).max(64),
+  outdatedPassword: Joi.string().when('newPassword', {
+    is: Joi.string(),
+    then: Joi.string().required().min(8).max(64),
+    // otherwise: Joi.string().required(),
+  }),
   name: Joi.string(),
   gender: Joi.string().valid("male", "female"),
 });

@@ -42,10 +42,6 @@ export const getUserInfo = async (req, res) => {
     "avatarURL email name waterRate gender verify"
   );
 
-  if (!user) {
-    throw HttpError(404, "Not found");
-  }
-
   res.status(200).send({
     email: user.email,
     avatarURL: user.avatarURL,

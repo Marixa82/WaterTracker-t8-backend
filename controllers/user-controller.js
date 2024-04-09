@@ -60,7 +60,7 @@ export const updateInfo = async (req, res) => {
     throw HttpError(400, "Must be at least one field");
 
   const user = await User.findOne({ email });
-  if (user) {
+  if (user && user.id !== id) {
     throw HttpError(409, "Email in use");
   }
   const updatedUser = await User.findById(id);

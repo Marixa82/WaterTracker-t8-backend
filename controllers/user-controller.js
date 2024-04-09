@@ -63,11 +63,11 @@ export const updateInfo = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
-  const { password: oldPass } = await User.findById(id);
+  const updatedUser = await User.findById(id);
   let hashPass;
 
   if (newPassword && outdatedPassword) {
-    const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
+    const isCorrectPass = await bcryptjs.compare(outdatedPassword, updatedUser.password);
     
       if (!isCorrectPass) {
         throw HttpError(400, "Old password is wrong");
@@ -76,7 +76,6 @@ export const updateInfo = async (req, res) => {
       hashPass = await bcryptjs.hash(newPassword, 10);
   }
   
-  const updatedUser = await User.findById(id);
   const result = await User.findByIdAndUpdate(id, {
     "email": email ?? updatedUser.email,
     "name": name ?? updatedUser.name,

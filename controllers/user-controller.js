@@ -17,7 +17,7 @@ export const updateAvatar = async (req, res) => {
     throw new Error("Формат зображення не підтримується.");
   }
 
-  image.resize(28, 28);
+  image.resize(48, 48);
   await image.writeAsync(tempUpload);
 
   const filename = `${_id}_${originalname}`;
@@ -80,13 +80,13 @@ export const updateInfo = async (req, res) => {
       throw HttpError(400, "You must enter new password.");
     }
     const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
-  
+
     if (!isCorrectPass) {
       throw HttpError(400, "Old password is wrong");
     }
 
     let hashPass;
-    
+
     hashPass = await bcryptjs.hash(newPassword, 10);
     req.body.password = hashPass;
   }
@@ -109,7 +109,7 @@ export const updateInfo = async (req, res) => {
     waterRate: result.waterRate,
     gender: result.gender,
     verify: result.verify,
-    
+
   });
 };
 

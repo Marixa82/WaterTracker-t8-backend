@@ -65,9 +65,7 @@ export const verifyEmailController = async (req, res) => {
     verify: true,
     verificationCode: "",
   });
-  res.json({
-    message: "Email verify success",
-  });
+  res.status(200).redirect(`${FRONTEND_URL}/singin`);
 };
 
 export const resendVerifyEmailController = async (req, res) => {

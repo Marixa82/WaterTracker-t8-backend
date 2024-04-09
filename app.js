@@ -7,6 +7,8 @@ import { waterRouter } from "./routes/water-router.js";
 import { userRouter } from "./routes/user-router.js";
 import { deleteUnverifiedUsers } from "./helpers/index.js";
 setInterval(deleteUnverifiedUsers, 24 * 60 * 60 * 1000);
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./swagger.json" assert { type: 'json' };
 const app = express();
 
 app.use(morgan("tiny"));
@@ -16,6 +18,8 @@ app.use(express.static("public"));
 app.use("/api/auth", authRouter);
 app.use("/api/waters", waterRouter);
 app.use("/api/user", userRouter);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.use((_, res) => {
   res.status(404).json({ message: "Route not found" });

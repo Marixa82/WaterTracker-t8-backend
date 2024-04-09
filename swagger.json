@@ -1,0 +1,1303 @@
+
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "WaterTracker",
+    "description": "",
+    "version": "1.0.8"
+  },
+  "servers": [
+    {
+      "url": "https://watertracker-t8-backend.onrender.com"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    },
+    {
+      "name": "User",
+      "description": "User basic information"
+    },
+    {
+      "name": "Waters",
+      "description": "Waters endpoints"
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User registration",
+        "requestBody": {
+          "description": "Registration user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "New user is created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorConflictResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User login",
+        "requestBody": {
+          "description": "Login user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User logout",
+        "description": "Logout user",
+        "responses": {
+          "204": {
+            "description": "User logout successfully"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/auth/verify": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "requestBody": {
+          "description": "Verification user email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Verify email send success"
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/verify/{verificationCode}": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "parameters": [
+          {
+            "name": "verificationCode",
+            "in": "path",
+            "description": "verificationCode user",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Email verify success"
+          },
+          "404": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "User verification",
+        "requestBody": {
+          "description": "Verification user email",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Temporary password has been sent to your email"
+          },
+          "400": {
+            "description": "Validation error or Empty body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  "/api/user/avatars": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's avatar",
+        "requestBody": {
+          "description": "Add  user avatar",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/UserAvatarRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "User avatar is add success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAvatarResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/user/current": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's info",
+        "description": "Get user info",
+        "responses": {
+          "200": {
+            "description": "All information about user",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User's update info",
+        "requestBody": {
+          "description": "User's new info",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserUpdateInfoRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "The user data change was successful",
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInfoResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/user": {
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "summary": "User delete",
+        "description": "Delete user account",
+        "responses": {
+          "204": {
+            "description": "User account delete successfully"
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/waters/water_rate": {
+      "patch": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "Update user's water_rate",
+        "requestBody": {
+          "description": "Update water_rate of user",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserWaterRateUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Water Rate was changed successful"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/waters": {
+      "post": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User's add water points",
+        "requestBody": {
+          "description": "Add information for point water",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserWaterPointRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "New water portion is added successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserWaterPointResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unautorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/waters/{id}": {
+      "put": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "Water point user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "change user water point by waterID",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Add information for point water",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WaterPointUpdateByIdRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Change water point user by id is success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterPointUpdateByIdResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unautorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "Delete water point user by id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "water point Id",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Water point is delete success"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unautorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "There are not portions with id <id>",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorNotFoundResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/waters/per_month": {
+      "get": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User water per month volume",
+        "description": "Info about user water volume per month",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Custom date format (MM-YYYY)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string",
+              "example": "03-2023"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User point per_month",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterInfoPerMonthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
+    "/api/waters/today": {
+      "get": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User water volume today",
+        "description": "Info about user water volume today",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Custom date format (DD-MM-YYYY)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User point today",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterInfoTodayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    }
+  }, 
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "pattern": "allow:[com, net]",
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "maximum": 64,
+            "minimum": 8,
+            "type": "string",
+            "description": "User's password",
+            "format": "password",
+            "example": "qwerty12345"
+          }
+        }
+      },
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "201"
+          },
+          "message": {
+            "type": "string",
+            "description": "New user is created"
+          }
+        }
+      },
+      "LoginResponse": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Login UserEmail successful"
+          },
+          "token": {
+            "type": "string",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxNDYxNGM1MGRiMTNjNjk1N2MxMiIsImlhdCI6MTcxMjA2NzcyMiwiZXhwIjoxNzEyMTUwNTIyfQ.dftMsB6Sz2bzb5HEYmGWRgM9G3tAdTXVH0rYrxW4b6U"
+          }
+        }
+      },
+      "LogoutRequest": {
+        "required": [
+          "token"
+        ],
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token",
+            "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MGMxNDYxNGM1MGRiMTNjNjk1N2MxMiIsImlhdCI6MTcxMjA2NzcyMiwiZXhwIjoxNzEyMTUwNTIyfQ.dftMsB6Sz2bzb5HEYmGWRgM9G3tAdTXVH0rYrxW4b6U"
+          }
+        }
+      },
+      "VerificationRequest": {
+        "required": [
+          "email"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        }
+      },
+      "UserAvatarRequest": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "UserAvatarResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "nullable": true,
+            "example": "https://res.cloudinary.com/dwlu2h8dv/image/upload/v1712338141/avatars/660dc04170132ea38d6dc147_IMG_3308.JPG.jpg"
+          }
+        }
+      },
+      "UserInfoResponse": {
+        "type": "object",
+        "properties": {
+          "avatarURL": {
+            "type": "string",
+            "description": "Unique avatar of the user",
+            "example": "https://res.cloudinary.com/dwlu2h8dv/image/upload/v1712338141/avatars/660dc04170132ea38d6dc147_IMG_3308.JPG.jpg"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email"
+          },
+          "name": {
+            "type": "string",
+            "example": "UserName",
+            "default": "email"
+          },
+          "gender": {
+            "type": "string",
+            "nullable": true,
+            "example": "female",
+            "enum": [
+              "male",
+              "female"
+            ]
+          },
+          "waterRate": {
+            "maximum": 15000,
+            "minimum": 0,
+            "type": "number"
+          },
+          "verify": {
+            "type": "boolean"
+          }
+        }
+      },
+      "UserUpdateInfoRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's display name"
+          },
+          "email": {
+            "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "outdatedPassword": {
+            "maxLength": 64,
+            "minLength": 8,
+            "type": "string",
+            "description": "User's old password"
+          },
+          "newPassword": {
+            "maxLength": 64,
+            "minLength": 8,
+            "type": "string",
+            "description": "User's password"
+          },
+          "gender": {
+            "type": "string",
+            "description": "User's gender",
+            "enum": [
+              "male",
+              "female"
+            ]
+          }
+        }
+      },
+      "UserWaterRateUpdateRequest" : {
+        "type" : "object",
+        "required" : [ "waterRate", "date" ],
+        "properties" : {
+          "waterRate" : {
+            "type" : "number",
+            "description" : "User's waterRate"
+          },
+          "date" : {
+            "type" : "string",
+            "pattern" : "^\\d{2}/\\d{2}/\\d{4}$",
+            "description" : "Custom date format (DD/MM/YYYY)"
+          }
+        }
+      },
+      "UserWaterPointRequest" : {
+        "type" : "object",
+        "properties" : {
+          "date" : {
+            "type" : "string",
+            "pattern" : "^\\d{2}/\\d{2}/\\d{4}$",
+            "description" : "Custom date format (DD/MM/YYYY)",
+            "example" : "12/03/2024"
+          },
+          "time" : {
+            "type" : "string",
+            "format" : "time",
+            "example" : "12:51"
+          },
+          "waterAmount" : {
+            "type" : "number",
+            "description" : "The amount of water",
+            "example" : 500
+          }
+        }
+      },
+      "UserWaterPointResponse" : {
+        "type" : "object",
+        "properties" : {
+          "WaterData" : {
+            "type" : "object",
+            "properties" : {
+              "day" : {
+                "type" : "string",
+                "format" : "date",
+                "pattern" : "^(0[1-9]|[1-2][0-9]|3[0-1])$",
+                "description" : "The day of the month (two digits)",
+                "example" : "02"
+              },
+              "month" : {
+                "type" : "string",
+                "format" : "date-time",
+                "example" : "April"
+              },
+              "year" : {
+                "type" : "integer",
+                "format" : "int32",
+                "description" : "Year",
+                "example" : 2022
+              },
+              "time" : {
+                "type" : "string",
+                "format" : "time",
+                "example" : "12:50"
+              },
+              "amount" : {
+                "type" : "number",
+                "description" : "The amount of water",
+                "example" : 500
+              }
+            }
+          }
+        }
+      },
+      "WaterPointUpdateByIdRequest" : {
+        "type" : "object",
+        "properties" : {
+          "time" : {
+            "type" : "string",
+            "format" : "time",
+            "example" : "12:51"
+          },
+          "waterAmount" : {
+            "type" : "number",
+            "description" : "The amount of water",
+            "example" : 500
+          }
+        }
+      },
+      "WaterPointUpdateByIdResponse" : {
+        "type" : "object",
+        "properties" : {
+          "waterPortion" : {
+            "type" : "object",
+            "properties" : {
+              "day" : {
+                "type" : "string",
+                "format" : "date",
+                "pattern" : "^(0[1-9]|[1-2][0-9]|3[0-1])$",
+                "description" : "The day of the month (two digits)",
+                "example" : "02"
+              },
+              "month" : {
+                "type" : "string",
+                "format" : "date-time",
+                "example" : "April"
+              },
+              "year" : {
+                "type" : "integer",
+                "format" : "int32",
+                "description" : "Year",
+                "example" : 2022
+              },
+              "time" : {
+                "type" : "string",
+                "format" : "time",
+                "example" : "12:50"
+              },
+              "amount" : {
+                "type" : "number",
+                "description" : "The amount of water",
+                "example" : 500
+              },
+              "_id" : {
+                "type" : "string",
+                "description" : "The unique identifier of the water point",
+                "example" : "660fcb094665f6bc79423d3e"
+              }
+            }
+          }
+        }
+      },
+      "WaterInfoTodayResponse" : {
+        "type" : "object",
+        "properties" : {
+          "day" : {
+            "type" : "string",
+            "format" : "date",
+            "pattern" : "^(0[1-9]|[1-2][0-9]|3[0-1])$",
+            "description" : "The day of the month (two digits)",
+            "example" : "02"
+          },
+          "month" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "April"
+          },
+          "year" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Year",
+            "example" : 2022
+          },
+          "waterRateForThisDay" : {
+            "type" : "number",
+            "description" : "The waterRate for this day",
+            "example" : 2500
+          },
+          "allAmountForDay" : {
+            "type" : "number",
+            "description" : "The all amount waters of this day",
+            "example" : 3500
+          },
+          "percentageWater" : {
+            "type" : "string",
+            "example" : "73.33%"
+          },
+          "portionsOfWater" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "time", "amount", "_id" ],
+              "properties" : {
+                "time" : {
+                  "type" : "string",
+                  "format" : "time",
+                  "example" : "12:51"
+                },
+                "amount" : {
+                  "type" : "number",
+                  "description" : "The amount of water",
+                  "example" : 500
+                },
+                "_id" : {
+                  "type" : "string",
+                  "example" : "660fcb094665f6bc79423d3e"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WaterInfoPerMonthResponse" : {
+        "type" : "object",
+        "properties" : {
+          "month" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "April"
+          },
+          "year" : {
+            "type" : "integer",
+            "format" : "int32",
+            "description" : "Year",
+            "example" : 2022
+          },
+          "waterForMonth" : {
+            "type" : "array",
+            "items" : {
+              "type" : "object",
+              "required" : [ "totalPortionsOfWater", "date", "dailyNorm", "percentageWater" ],
+              "properties" : {
+                "totalPortionsOfWater" : {
+                  "type" : "number"
+                },
+                "date" : {
+                  "type" : "string",
+                  "format" : "date",
+                  "example" : "03 2024"
+                },
+                "dailyNorm" : {
+                  "type" : "string",
+                  "description" : "The daily water consumption norm",
+                  "pattern" : "^\\d+(\\.\\d+)?\\s*[mlL]{1}$",
+                  "example" : "1.5 L"
+                },
+                "percentageWater" : {
+                  "type" : "string",
+                  "description" : "The percentage of water consumed",
+                  "pattern" : "^\\d+(\\.\\d+)?\\s*%$",
+                  "example" : "73.33 %"
+                }
+              }
+            }
+          }
+        }
+      },
+      "errorBadRequestResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "400"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          }
+        }
+      },
+      "errorConflictResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "409"
+          },
+          "message": {
+            "type": "string",
+            "description": "Email in use"
+          }
+        }
+      },
+      "errorUnauthorizedResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "401"
+          },
+          "message": {
+            "type": "string",
+            "description": "Not authorized"
+          }
+        }
+      },
+      "errorNotFoundResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "404"
+          },
+          "message": {
+            "type": "string",
+            "description": "Not found"
+          }
+        }
+      },
+      "errorServerResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "description": "500"
+          },
+          "message": {
+            "type": "string",
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "GoogleAuth": {
+        "type": "oauth2",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "https://watertracker-t8-backend.onrender.com/api/auth/google",
+            "scopes": {
+              "profile": "user profile",
+              "email": "user email"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    
+  

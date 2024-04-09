@@ -49,25 +49,25 @@ Before you can run the Water Tracker backend, you'll need to have the following 
 3. Install the project dependencies:
    `npm install
 or
-yarn install` (click to copy)
+yarn install`(click to copy)
 4. Configure the environment variables. You will need to create a .env file in the project root and define the required variables (e.g., database connection details, API keys, etc) - see `.env.example` for required variables.
 5. Start the server:
    `npm run start:dev
 or
-yarn run start:dev` (click to copy)
+yarn run start:dev`(click to copy)
    Your Water Tracker backend should now be running and accessible at `http://localhost:3000` (if you set the PORT `.env` variable as 3000).
 
 # Usage
 
 Here are some example use cases of the Water Tracker backend:
 
-- To create a new user account, send a POST request to `/auth/register`.
-- To verify a user's email, send a GET request to `/auth/verify/:verificationCode`.
-- To request a user's email verification, send a POST request to `/auth/verify`.
-- To authenticate a user, send a POST request to `/auth/login`.
-- To logout a user, send a POST request to `/auth/logout`.
+- To create a new user account, send a POST request to `/api/auth/register`.
+- To verify a user's email, send a GET request to `/api/auth/verify/:verificationCode`.
+- To request a user's email verification, send a POST request to `/api/auth/verify`.
+- To authenticate a user, send a POST request to `/api/auth/login`.
+- To logout a user, send a POST request to `/api/auth/logout`.
 - To forgot-password a user, send a POST request to `/api/auth/forgot-password`.
-- To update a user's avatar, send a PATCH request to `/user/avatars`.
+- To update a user's avatar, send a PATCH request to `/api/user/avatars`.
 - To get a user's current profile, send a GET request to `/api/user/current`.
 - To update a user's current profile, send a PUT request to `/api/user/current`.
 - To delete a user's account, send a DELETE request to `/api/user`.

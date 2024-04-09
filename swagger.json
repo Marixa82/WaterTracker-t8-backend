@@ -8,7 +8,7 @@
   },
   "servers": [
     {
-      "url": "https://watertracker-t8-backend.onrender.com"
+      "url": "https://watertracker-t8-backend.onrender.com/api"
     },
     {
       "url": "http://localhost:3000",

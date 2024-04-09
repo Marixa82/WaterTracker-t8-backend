@@ -82,7 +82,7 @@ These endpoints allow you to interact with various features on the Water Tracker
 
 # API Documentation
 
-For detailed API documentation or tests, please refer to the [Swagger API Documentation]("https://watertracker-t8-backend.onrender.com/api-docs"). The first opening may be long, because free render.com service is used for backend deployment.
+For detailed API documentation or tests, please refer to the [Swagger API Documentation]("https://watertracker-t8-backend.onrender.com/api-docs/#/"). The first opening may be long, because free render.com service is used for backend deployment.
 
 # Contributors
 

@@ -64,39 +64,27 @@ export const updateInfo = async (req, res) => {
     throw HttpError(409, "Email in use");
   }
   const { password: oldPass } = await User.findById(id);
+  let hashPass;
 
-  if (outdatedPassword && !newPassword) {
-    throw HttpError(400, "You forgot to enter your new password");
-  }
-  else if (!outdatedPassword && newPassword) {
-    throw HttpError(400, "You need to enter your outdated password.");
-  }
-  else if (outdatedPassword && newPassword) {
-    if (outdatedPassword === newPassword) {
-      throw HttpError(400, "You must enter new password.");
-    }
+  if (newPassword && outdatedPassword) {
     const isCorrectPass = await bcryptjs.compare(outdatedPassword, oldPass);
-  
-    if (!isCorrectPass) {
-      throw HttpError(400, "Old password is wrong");
-    }
-
-    let hashPass;
     
-    hashPass = await bcryptjs.hash(newPassword, 10);
-    req.body.password = hashPass;
+      if (!isCorrectPass) {
+        throw HttpError(400, "Old password is wrong");
+      }
+      
+      hashPass = await bcryptjs.hash(newPassword, 10);
   }
-
-  const result =
-    (await User.findByIdAndUpdate(id, req.body, {
+  
+  const updatedUser = await User.findById(id);
+  const result = await User.findByIdAndUpdate(id, {
+    "email": email ?? updatedUser.email,
+    "name": name ?? updatedUser.name,
+    "gender": gender ?? updatedUser.gender,
+    "password": hashPass ?? updatedUser.password
+  }, {
       new: true,
-    })) || null;
-
-  if (result === null) {
-    throw HttpError(404, "Not found");
-  }
-
-
+    });
 
   res.status(200).json({
     email: result.email,

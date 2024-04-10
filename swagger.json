@@ -267,7 +267,7 @@
           }
         }
       }
-    },
+    }, 
   "/api/user/avatars": {
       "patch": {
         "tags": [
@@ -464,7 +464,14 @@
         },
         "responses": {
           "200": {
-            "description": "Password is correct"
+            "description": "Password is correct",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckPasswordResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Password is wrong"
@@ -713,6 +720,68 @@
         ]
       }
     },
+    "/api/waters/today": {
+      "get": {
+        "tags": [
+          "Waters"
+        ],
+        "summary": "User water volume today",
+        "description": "Info about user water volume today",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Custom date format (DD-MM-YYYY)",
+            "required": true,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User point today",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaterInfoTodayResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorBadRequestResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
+      }
+    },
     "/api/waters/per_month": {
       "get": {
         "tags": [
@@ -775,70 +844,8 @@
           }
         ]
       }
-    },
-    "/api/waters/today": {
-      "get": {
-        "tags": [
-          "Waters"
-        ],
-        "summary": "User water volume today",
-        "description": "Info about user water volume today",
-        "parameters": [
-          {
-            "name": "date",
-            "in": "query",
-            "description": "Custom date format (DD-MM-YYYY)",
-            "required": true,
-            "style": "form",
-            "explode": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "User point today",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/WaterInfoTodayResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorBadRequestResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/errorUnauthorizedResponse"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "Bearer": []
-          },
-          {
-            "GoogleAuth":[]
-          }
-        ]
-      }
     }
-  }, 
+  },
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -1023,6 +1030,14 @@
             "description": "User's password",
             "format": "password",
             "example": "qwerty12345"
+          }
+        }
+      },
+      "CheckPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "isCorrectPass": {
+            "type": "boolean"
           }
         }
       },

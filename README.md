@@ -1,5 +1,7 @@
 # WaterTracker-t8-backend
 
+<img src="https://res.cloudinary.com/dwlu2h8dv/image/upload/w_102,h_48/v1712760548/avatars/6612a0f9302b9dafa54121ca_Logo.png.png" alt="Logo">
+
 The Water Tracker app provides basic functionality for a web application that allows you to track and manage your water consumption on a daily basis.
 
 ## Table of Contents

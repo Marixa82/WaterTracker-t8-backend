@@ -469,7 +469,15 @@
           "401": {
             "description": "Password is wrong"
           }
-        }
+        },
+        "security": [
+          {
+            "Bearer": []
+          },
+          {
+            "GoogleAuth":[]
+          }
+        ]
       }
     },
     "/api/waters/water_rate": {

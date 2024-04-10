@@ -5,9 +5,10 @@ import {
   getUserInfo,
   updateInfo,
   deleteController,
+  checkPasswordController,
 } from "../controllers/user-controller.js";
 import { ctrlWrapper, validateBody } from "../helpers/index.js";
-import { updateUserInfoSchema } from "../models/userModel.js";
+import { passwordSchema, updateUserInfoSchema } from "../models/userModel.js";
 
 export const userRouter = express.Router();
 
@@ -26,4 +27,5 @@ userRouter.put(
   validateBody(updateUserInfoSchema),
   ctrlWrapper(updateInfo)
 );
-userRouter.delete('/', authValidation, ctrlWrapper(deleteController))
+userRouter.delete('/', authValidation, ctrlWrapper(deleteController));
+userRouter.post('/checkPassword', authValidation, validateBody(passwordSchema), ctrlWrapper(checkPasswordController))

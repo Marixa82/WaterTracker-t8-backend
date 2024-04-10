@@ -72,11 +72,10 @@ yarn install
    npm run dev
    ```
    або
-   ````
+   ```
    yarn run dev
    ```
    )
-   ````
 
 # Використання
 

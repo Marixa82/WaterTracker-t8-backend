@@ -1,5 +1,7 @@
 # WaterTracker-t8-backend
 
+<img src="https://res.cloudinary.com/dwlu2h8dv/image/upload/w_102,h_48/v1712760548/avatars/6612a0f9302b9dafa54121ca_Logo.png.png" alt="Logo">
+
 Програма надає базову функіональність для веб-застосунка, що дозволяє відстежувати та керувати споживанням води щоденно.
 
 ## Зміст
@@ -33,12 +35,47 @@
 
 1. Переконайся що на комп'ютері встановлено LTS-версія Node.js.
 2. Склонуйте репозиторій на свою локальну машину:
-   `git clone https://github.com/marixa82/WaterTracker-t8-backend`
-3. Change your current directory to the project folder:
-   `cd WaterTracker-t8-backend`
-4. Встанови базові залежності проєкту командою "npm install" aбо "yarn install"
+
+```
+ git clone https://github.com/marixa82/WaterTracker-t8-backend
+```
+
+3. Зміни свою поточну директорію на папку проекту:
+
+```
+cd WaterTracker-t8-backend
+```
+
+4. Встанови базові залежності проєкту командою
+
+```
+   npm install
+```
+
+aбо
+
+```
+yarn install
+```
+
 5. Налаштуй змінні оточення. Для цього потрібно створити файл ".env" у корені проекту та визначити обов'язкові змінні(дивись файл ".env.example")
-6. Запусти сервер командою "npm start" або "yarn start" (Для режиму розробки використовуй "npm run dev" або "yarn run dev")
+6. Запусти сервер командою
+   ```
+   npm start
+   ```
+   або
+   ```
+   yarn start
+   ```
+   (Для режиму розробки використовуй
+   ```
+   npm run dev
+   ```
+   або
+   ````
+   yarn run dev
+   ```)
+   ````
 
 # Використання
 
@@ -53,6 +90,7 @@
 - Оновлення аватарки користувача, PATCH запит на `/api/user/avatars`.
 - Отримання інформації поточного користувача, GET запит на `/api/user/current`.
 - Оновлення загальної інформації поточного користувача, PUT запит на `/api/user/current`.
+- Перевірка паролю поточного користувача, POST запит на `/api/user/checkPassword`.
 - Видалення акаунта користувача, DELETE запит на `/api/user`.
 - Оновлення денної норми споживання води, PATCH запит на `/api/waters/water_rate`.
 - Додавання порції випитої води, POST запит на `/api/waters`.
@@ -69,11 +107,15 @@
 # Автори
 
 - Марина Аксакова - Тім лід / Розробник
-  - [GitHub](https://github.com/Marixa82)
-  - [LinkedIn](https://www.linkedin.com/in/maryna-aksakova-3a0b9623b/)
+- [GitHub](https://github.com/Marixa82)
+- [LinkedIn](https://www.linkedin.com/in/maryna-aksakova-3a0b9623b/)
 - Аліна Танцура - Розробник
-  - [GitHub](https://github.com/AlinaTantsura)
-  - [LinkedIn](https://www.linkedin.com/in/alina-tantsura/)
-- Максим Висоцкий - Розробник
-  - [GitHub](https://github.com/Needlife1)
-  - [LinkedIn](https://www.linkedin.com/in/maxim-vysotsky-74a570274/)
+- [GitHub](https://github.com/AlinaTantsura)
+- [LinkedIn](https://www.linkedin.com/in/alina-tantsura/)
+- Максим Висоцький - Розробник
+- [GitHub](https://github.com/Needlife1)
+- [LinkedIn](https://www.linkedin.com/in/maxim-vysotsky-74a570274/)
+
+```
+
+```

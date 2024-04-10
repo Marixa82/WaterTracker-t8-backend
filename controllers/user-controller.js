@@ -104,3 +104,18 @@ export const deleteController = async (req, res) => {
 
   res.status(204).json();
 };
+
+export const checkPasswordController = async (req, res) => {
+  const { id } = req.user;
+  const { password } = req.body;
+
+  const user = await User.findById(id);
+  const isCorrectPass = await bcryptjs.compare(password, user.password);
+
+  if (!isCorrectPass) throw HttpError(401, "Password is wrong");
+
+  res.json({
+    "message": "Password is correct",
+    isCorrectPass
+  })
+}

@@ -464,7 +464,14 @@
         },
         "responses": {
           "200": {
-            "description": "Password is correct"
+            "description": "Password is correct",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckPasswordResponse"
+                }
+              }
+            }
           },
           "401": {
             "description": "Password is wrong"
@@ -1023,6 +1030,14 @@
             "description": "User's password",
             "format": "password",
             "example": "qwerty12345"
+          }
+        }
+      },
+      "CheckPasswordResponse": {
+        "type": "object",
+        "properties": {
+          "isCorrectPass": {
+            "type": "boolean"
           }
         }
       },

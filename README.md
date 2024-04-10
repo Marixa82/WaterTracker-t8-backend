@@ -65,7 +65,7 @@ Before you can run the Water Tracker backend, you'll need to have the following 
    or
    yarn run start:dev
    ```
-   Your Water Tracker backend should now be running and accessible at `http://localhost:3000` (if you set the PORT `.env` variable as 3000).
+   Your Water Tracker backend should now be running and accessible at `http://localhost:4000` (if you set the PORT `.env` variable as 4000).
 
 # Usage
 

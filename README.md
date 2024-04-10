@@ -43,18 +43,26 @@ Before you can run the Water Tracker backend, you'll need to have the following 
 # Installation
 
 1. Clone the repository to your local machine:
-   `git clone https://github.com/marixa82/WaterTracker-t8-backend` (click to copy)
+   ```
+   git clone https://github.com/marixa82/WaterTracker-t8-backend
+   ```
 2. Change your current directory to the project folder:
-   `cd WaterTracker-t8-backend` (click to copy)
+   ```
+   cd WaterTracker-t8-backend
+   ```
 3. Install the project dependencies:
-   `npm install
-or
-yarn install`(click to copy)
+   ```
+   npm install
+   or
+   yarn install
+   ```
 4. Configure the environment variables. You will need to create a .env file in the project root and define the required variables (e.g., database connection details, API keys, etc) - see `.env.example` for required variables.
 5. Start the server:
-   `npm run start:dev
-or
-yarn run start:dev`(click to copy)
+   ```
+   npm run start:dev
+   or
+   yarn run start:dev
+   ```
    Your Water Tracker backend should now be running and accessible at `http://localhost:3000` (if you set the PORT `.env` variable as 3000).
 
 # Usage
@@ -70,6 +78,7 @@ Here are some example use cases of the Water Tracker backend:
 - To update a user's avatar, send a PATCH request to `/api/user/avatars`.
 - To get a user's current profile, send a GET request to `/api/user/current`.
 - To update a user's current profile, send a PUT request to `/api/user/current`.
+- To check a user's password before delete user account, send a POST request to `/api/user/checkPassword`.
 - To delete a user's account, send a DELETE request to `/api/user`.
 - To update user's water rate, send a PATCH request to `/api/waters/water_rate`.
 - To add a record of consumed water, send a POST request to `/api/waters`.
@@ -93,5 +102,8 @@ For detailed API documentation or tests, please refer to the [Swagger API Docume
   - [GitHub](https://github.com/AlinaTantsura)
   - [LinkedIn](https://www.linkedin.com/in/alina-tantsura/)
 - Maksym Visotsky - Developer
+
   - [GitHub](https://github.com/Needlife1)
   - [LinkedIn](https://www.linkedin.com/in/maxim-vysotsky-74a570274/)
+
+  **A big thank you to our team for their contributions to this project!**

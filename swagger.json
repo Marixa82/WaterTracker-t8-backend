@@ -445,6 +445,33 @@
         ]
       }
     },
+    "/api/user/checkPassword": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Check User`s password",
+        "requestBody": {
+          "description": "Check user password",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Password is correct"
+          },
+          "401": {
+            "description": "Password is wrong"
+          }
+        }
+      }
+    },
     "/api/waters/water_rate": {
       "patch": {
         "tags": [
@@ -972,6 +999,22 @@
               "male",
               "female"
             ]
+          }
+        }
+      },
+      "CheckPasswordRequest": {
+        "required": [
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "password": {
+            "maximum": 64,
+            "minimum": 8,
+            "type": "string",
+            "description": "User's password",
+            "format": "password",
+            "example": "qwerty12345"
           }
         }
       },

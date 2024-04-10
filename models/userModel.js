@@ -76,3 +76,7 @@ export const emailSchema = Joi.object({
     .required()
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
 });
+
+export const passwordSchema = Joi.object({
+  password: Joi.string().min(8).max(64).required(),
+});

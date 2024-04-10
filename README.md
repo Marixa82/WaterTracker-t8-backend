@@ -31,7 +31,7 @@ The Water Tracker app provides basic functionality for a web application that al
 
 # Features
 
-The Water Tracker backend provides a set of functions that allow users to interact with the system through API endpoints (# Usage)
+The Water Tracker backend provides a set of functions that allow users to interact with the system through API endpoints [Usage](#usage)
 
 # Getting Started
 

@@ -63,7 +63,7 @@
 
 # Документація
 
-Для детального ознайомлення з документацією або тесту, будь-ласка, переходьте за посиланням [Swagger API Documentation]("https://watertracker-t8-backend.onrender.com/api-docs/#/").
+Для детального ознайомлення з документацією або тесту, будь-ласка, переходьте за посиланням [Swagger API Documentation](`https://watertracker-t8-backend.onrender.com/api-docs/#/`).
 Перший запуск може зайняти якийсь час, тому що використовується публічний render.com сервіс.
 
 # Автори

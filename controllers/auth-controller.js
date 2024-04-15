@@ -212,6 +212,7 @@ export const googleRedirect = async (req, res) => {
     user.token = token;
     await user.save();
 
-    return res.redirect(`${FRONTEND_URL}/?token=${token}`);
+    return res.redirect(`${FRONTEND_URL} / signin /? token = ${token}`);
+    // return res.redirect(`${FRONTEND_URL}/?token=${token}`);
   }
 };

@@ -38,4 +38,5 @@ authRouter.post(
   ctrlWrapper(forgotPasswordController)
 );
 authRouter.get("/google", ctrlWrapper(googleAuth));
-authRouter.get("/google-redirect", ctrlWrapper(googleRedirect));
+// authRouter.get("/google-redirect", ctrlWrapper(googleRedirect));
+authRouter.get("/google-callback", ctrlWrapper(googleRedirect));
